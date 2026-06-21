@@ -20,7 +20,9 @@ from tools.refresh_target_current_prices import refresh_target_current_prices
 from tools.export_excel_record import export_excel_record
 
 
-app = FastAPI(title="Daily Market Pool Cloud", version="1.0.0")
+APP_VERSION = "1.0.1-render-seed-gzip"
+
+app = FastAPI(title="Daily Market Pool Cloud", version=APP_VERSION)
 
 CLOUD_UPDATE_JOB_PATH = engine.OUTPUT_DIR / "LATEST_CLOUD_UPDATE_JOB.json"
 CLOUD_UPDATE_PROGRESS_PATH = engine.OUTPUT_DIR / "LATEST_CLOUD_UPDATE_PROGRESS.txt"
