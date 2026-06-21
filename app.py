@@ -20,7 +20,7 @@ from tools.refresh_target_current_prices import refresh_target_current_prices
 from tools.export_excel_record import export_excel_record
 
 
-APP_VERSION = "1.0.1-render-seed-gzip"
+APP_VERSION = "1.0.2-render-seed-gzip"
 
 app = FastAPI(title="Daily Market Pool Cloud", version=APP_VERSION)
 
@@ -161,6 +161,30 @@ def safe_export_excel_record() -> dict[str, Any]:
 @app.get("/")
 def index() -> FileResponse:
     return FileResponse(ensure_dashboard())
+
+
+@app.get("/api/version")
+def version() -> JSONResponse:
+    required = [
+        "tw_strategy_prices_tail.csv",
+        "us_scan_prices_tail.csv",
+        "us_execution_prices_tail.csv",
+    ]
+    return JSONResponse(
+        {
+            "ok": True,
+            "app_version": APP_VERSION,
+            "data_dir": str(engine.DATA_DIR),
+            "seed_files": {
+                name: {
+                    "exists": (engine.DATA_DIR / name).exists(),
+                    "bytes": (engine.DATA_DIR / name).stat().st_size if (engine.DATA_DIR / name).exists() else 0,
+                    "gz_exists": (engine.BASE_DIR / "data_live" / f"{name}.gz").exists(),
+                }
+                for name in required
+            },
+        }
+    )
 
 
 @app.get("/api/status")
