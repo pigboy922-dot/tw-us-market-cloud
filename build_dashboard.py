@@ -20,7 +20,15 @@ ENTRY_BASELINE_PATH = STATE_DIR / "entry_signal_baseline.csv"
 ORDER_PLAN_PATH = OUTPUT_DIR / "LATEST_ORDER_PLAN.csv"
 HOLDING_COLS = ["market", "symbol", "shares", "avg_cost", "note"]
 CURRENT_PRICE_COLS = ["market", "symbol", "current_price", "price_date", "source", "updated_at"]
-ENTRY_BASELINE_COLS = ["market", "symbol", "signal_date", "signal_close", "created_at"]
+ENTRY_BASELINE_COLS = [
+    "market",
+    "symbol",
+    "signal_date",
+    "signal_close",
+    "source_signal_date",
+    "baseline_type",
+    "created_at",
+]
 DEFAULT_CAPITAL = {"TW": 1_000_000.0, "US": 100_000.0}
 PRICE_CURRENT_KEYS = ["live_price", "current_price", "last_price", "regular_market_price", "realtime_price"]
 ENTRY_RULE_DEFAULTS = {
@@ -539,10 +547,11 @@ def sync_entry_baselines(
                 continue
             key = (market, symbol)
             base = existing.get(key)
+            base_source_signal_date = str(base.get("source_signal_date", "") or base.get("signal_date", "")) if base else ""
             should_reset = (
                 market in reset_on_signal_change
                 and market_signal_date
-                and str(base.get("signal_date", "")) != market_signal_date
+                and base_source_signal_date != market_signal_date
             ) if base else False
             if base and not should_reset:
                 out_rows.append(
@@ -551,6 +560,8 @@ def sync_entry_baselines(
                         "symbol": symbol,
                         "signal_date": base.get("signal_date", ""),
                         "signal_close": base.get("signal_close", ""),
+                        "source_signal_date": base.get("source_signal_date", "") or base.get("signal_date", ""),
+                        "baseline_type": base.get("baseline_type", "") or "strategy_signal_close",
                         "created_at": base.get("created_at", ""),
                     }
                 )
@@ -570,6 +581,8 @@ def sync_entry_baselines(
                     "symbol": symbol,
                     "signal_date": signal.get("date", ""),
                     "signal_close": signal.get("close", ""),
+                    "source_signal_date": market_signal_date or signal.get("date", ""),
+                    "baseline_type": "strategy_signal_close",
                     "created_at": now,
                 }
             )
@@ -654,6 +667,24 @@ def apply_entry_status(
     return out
 
 
+def entry_baseline_date_text(
+    baselines: dict[tuple[str, str], dict[str, Any]],
+    market: str,
+) -> str:
+    dates = sorted(
+        {
+            str(row.get("signal_date", ""))
+            for (row_market, _symbol), row in baselines.items()
+            if row_market == market and str(row.get("signal_date", ""))
+        }
+    )
+    if not dates:
+        return ""
+    if len(dates) == 1:
+        return dates[0]
+    return f"{dates[0]}~{dates[-1]}"
+
+
 def holdings_map(holdings: list[dict[str, Any]], market: str) -> dict[str, float]:
     out: dict[str, float] = {}
     for row in holdings:
@@ -715,7 +746,9 @@ def build_order_rows(
                 "market": market,
                 "symbol": symbol,
                 "close": "" if close is None else close,
-                "price_date": price.get("current_price_date", price.get("date", "")),
+                "price_date": price.get("date", ""),
+                "current_price_date": price.get("current_price_date", ""),
+                "current_price_source": price.get("current_price_source", ""),
                 "target_amount": target_amount,
                 "target_shares": target_shares,
                 "current_shares": current_shares,
@@ -738,6 +771,8 @@ def write_order_plan(rows: list[dict[str, Any]]) -> None:
         "close",
         *PRICE_CURRENT_KEYS,
         "price_date",
+        "current_price_date",
+        "current_price_source",
         "target_amount",
         "target_shares",
         "current_shares",
@@ -1139,6 +1174,14 @@ def clean_order_panel(
         close = current_price_for_entry(row)
         gap = as_float(row.get("tracking_return_pct"))
         price_date = str(row.get("price_date", ""))
+        current_price_date = str(row.get("current_price_date", "") or price_date)
+        current_price_source = str(row.get("current_price_source", ""))
+        if current_price_source == "manual_ui" and current_price_date and current_price_date != price_date:
+            price_meta = f"校正價 {current_price_date} / 收盤日 {price_date}"
+        elif current_price_source == "manual_ui":
+            price_meta = f"校正價 {current_price_date or price_date}"
+        else:
+            price_meta = f"收盤日 {price_date}"
         signal_text = "-" if is_cash or not signal_date or signal_close is None else f"{signal_date} @ {signal_close:.2f}"
         band_text = "-" if is_cash or lower is None or upper is None else f"{lower:.2f} - {upper:.2f}"
         current_text = "-" if is_cash or close is None else f"{close:.2f}"
@@ -1162,7 +1205,7 @@ def clean_order_panel(
             "<div class='trade-facts'>"
             f"<div class='trade-fact'><span>{label_signal}</span><strong>{esc(signal_text)}</strong></div>"
             f"<div class='trade-fact trade-band'><span>{label_band}</span><strong>{esc(band_text)}</strong></div>"
-            f"<div class='trade-fact'><span>{label_current}</span><strong>{esc(current_text)} <em>{esc(gap_text)}</em></strong><small>{label_data} {esc(price_date)}</small></div>"
+            f"<div class='trade-fact'><span>{label_current}</span><strong>{esc(current_text)} <em>{esc(gap_text)}</em></strong><small>{esc(price_meta)}</small></div>"
             f"<div class='trade-fact'><span>{label_weight}</span><strong>{fmt_weight(row.get('target_weight'))}</strong></div>"
             f"<div class='trade-fact trade-amount-box'><span>{label_amount}</span><strong class='amount' data-currency='{currency}'>{fmt_money_value(row.get('target_amount'), currency)}</strong></div>"
             "</div>"
@@ -1418,6 +1461,7 @@ def main() -> Path:
     us_rebalance_today = as_bool(state_value(us_state, "rebalance_due_today_by_counter", False))
     us_rebalance = as_bool(state_value(us_state, "rebalance_due_next_session_by_counter", False))
     us_rebalance_date = str(state_value(us_state, "component_rebalance_date", ""))
+    us_signal_date = str(state_value(us_state, "component_signal_date", ""))
     us_days_since = as_int(state_value(us_state, "trading_days_since_rebalance", 0))
     us_rebalance_step = as_int(state_value(us_state, "rebalance_step_trading_days", 5), 5)
     tw_rebalance_today = as_bool(state_value(tw_state, "rebalance_due_today_by_counter", False))
@@ -1443,6 +1487,8 @@ def main() -> Path:
     us_rebalance_remaining = as_int(state_value(us_state, "rebalance_days_remaining", 0))
     price_new_rows = int(price_report.get("new_rows_total", 0) or 0) if isinstance(price_report, dict) else 0
     price_status = str(price_report.get("status", "")) if isinstance(price_report, dict) else ""
+    tw_entry_baseline_date = entry_baseline_date_text(entry_baselines, "TW")
+    us_entry_baseline_date = entry_baseline_date_text(entry_baselines, "US")
 
     tw_schedule_status = "今天換倉檢查" if tw_rebalance_today else ("下一交易日換倉檢查" if tw_rebalance_next else "未到換倉節奏")
     tw_schedule_text = (
@@ -1450,12 +1496,18 @@ def main() -> Path:
         f"已走 {tw_days_since}/{tw_rebalance_step} 交易日"
     )
     if tw_signal_date:
-        tw_schedule_text += f" / 訊號日 {tw_signal_date} 已走 {tw_days_since_signal} 日"
+        tw_schedule_text += f" / 策略訊號日 {tw_signal_date} 已走 {tw_days_since_signal} 日"
+    if tw_entry_baseline_date:
+        tw_schedule_text += f" / 入場基準 {tw_entry_baseline_date}"
     us_schedule_status = "今天換倉檢查" if us_rebalance_today else ("下一交易日換倉檢查" if us_rebalance else "未到換倉節奏")
     us_schedule_text = (
         f"{us_schedule_status} / 上次換倉 {us_rebalance_date or '-'} / "
         f"已走 {us_days_since}/{us_rebalance_step} 交易日"
     )
+    if us_signal_date:
+        us_schedule_text += f" / 策略訊號日 {us_signal_date}"
+    if us_entry_baseline_date:
+        us_schedule_text += f" / 入場基準 {us_entry_baseline_date}"
     rebalance_pill = pill(TXT["rebalance_due"], "ok") if us_rebalance else pill(TXT["not_rebalance"], "warn")
     regime_pill = pill(TXT["us_risk_on"], "ok") if us_regime == "risk_on" else pill(TXT["us_defense"], "danger")
     us_top1_label = zh(r"\u7f8e\u80a1Top1\u52d5\u614b\u5e02\u5834")
