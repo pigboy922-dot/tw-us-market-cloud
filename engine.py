@@ -2964,9 +2964,34 @@ TW_TOP1_COMPONENT_RULES = {
     },
 }
 
-TW_PRODUCTION_STRATEGY_ID = "TW_TOP2_HOLD46_CLEAN"
+TW_PRODUCTION_STRATEGY_ID = "TW_TOP1_TOP2_SWITCH_H46_TH020_CLEAN"
 TW_PRODUCTION_REBALANCE_STEP = 46
 TW_PRODUCTION_EXECUTION_TOP_N = 2
+TW_PRODUCTION_SWITCH_THRESHOLD = 0.20
+TW_PRODUCTION_CURRENT_MODE_BONUS = 0.05
+TW_PRODUCTION_FALLBACK_LEG = "DEFENSE_040838__TOP2"
+TW_PRODUCTION_STRATEGY_MODE = "top1_top2_switch_h46_th020"
+
+
+def tw_leg_base(component: str) -> str:
+    return str(component).split("__TOP", 1)[0]
+
+
+def tw_leg_top_n(component: str) -> int:
+    raw = str(component)
+    if "__TOP" not in raw:
+        return int(TW_TOP1_COMPONENT_RULES.get(raw, {}).get("n", TW_PRODUCTION_EXECUTION_TOP_N))
+    try:
+        return max(1, int(raw.rsplit("__TOP", 1)[1]))
+    except ValueError:
+        return TW_PRODUCTION_EXECUTION_TOP_N
+
+
+def tw_rule_for_leg(component: str) -> dict[str, Any]:
+    base = tw_leg_base(component)
+    rule = dict(TW_TOP1_COMPONENT_RULES[base])
+    rule["n"] = tw_leg_top_n(component)
+    return rule
 
 
 def cap_weights_np(w: np.ndarray, cap: float) -> np.ndarray:
@@ -3087,31 +3112,31 @@ def tw_select_top1_component(component_equity: pd.DataFrame) -> tuple[pd.DataFra
     dates = component_equity.index
     scores = tw_top1_switch_score(component_equity)
     selected_rows: list[dict[str, Any]] = []
-    mode = "DEFENSE_040838"
+    mode = TW_PRODUCTION_FALLBACK_LEG
     for j, date in enumerate(dates):
         if j == 0 or j % TW_PRODUCTION_REBALANCE_STEP == 0:
             sig_i = max(0, j - 1)
             sig_date = dates[sig_i]
             row = scores.iloc[sig_i].copy()
             if mode in row.index and np.isfinite(row.get(mode, np.nan)):
-                row.at[mode] = float(row.at[mode]) + 0.05
+                row.at[mode] = float(row.at[mode]) + TW_PRODUCTION_CURRENT_MODE_BONUS
             row = row.replace([np.inf, -np.inf], np.nan).dropna()
             top_score = float("nan")
-            selected = "defense"
+            selected = TW_PRODUCTION_FALLBACK_LEG
             if len(row):
                 ranked = row.sort_values(ascending=False)
                 top_score = float(ranked.iloc[0])
-                selected = str(ranked.index[0]) if top_score >= 0.10 else "defense"
-            mode = selected if selected != "defense" else "DEFENSE_040838"
+                selected = str(ranked.index[0]) if top_score >= TW_PRODUCTION_SWITCH_THRESHOLD else TW_PRODUCTION_FALLBACK_LEG
+            mode = selected
             selected_rows.append(
                 {
                     "date": date.strftime("%Y-%m-%d"),
                     "signal_date": sig_date.strftime("%Y-%m-%d"),
                     "score_preset": TW_PRODUCTION_STRATEGY_ID,
-                    "mode": "top2_h46",
+                    "mode": TW_PRODUCTION_STRATEGY_MODE,
                     "selected": mode,
                     "top_score": top_score,
-                    "fallback": "defense",
+                    "fallback": TW_PRODUCTION_FALLBACK_LEG,
                     "component_weights": f"{mode}:1.000000",
                 }
             )
@@ -3216,15 +3241,15 @@ def tw_live_go_live_selection(
     signal_i = int(locs[-1])
     signal_date = pd.Timestamp(close.index[signal_i]).strftime("%Y-%m-%d")
     scores = tw_top1_switch_score(component_eq).iloc[signal_i].replace([np.inf, -np.inf], np.nan).dropna()
-    selected = "DEFENSE_040838"
+    selected = TW_PRODUCTION_FALLBACK_LEG
     top_score = float("nan")
     if len(scores):
         ranked = scores.sort_values(ascending=False)
         top_score = float(ranked.iloc[0])
-        selected = str(ranked.index[0]) if top_score >= 0.10 else "DEFENSE_040838"
+        selected = str(ranked.index[0]) if top_score >= TW_PRODUCTION_SWITCH_THRESHOLD else TW_PRODUCTION_FALLBACK_LEG
     weights = tw_component_stock_weights_at(
         selected,
-        TW_TOP1_COMPONENT_RULES[selected],
+        tw_rule_for_leg(selected),
         close,
         symbol_map,
         features,
@@ -3261,9 +3286,13 @@ def run_tw_top1_daily(state: dict[str, Any]) -> dict[str, Any]:
     component_equities: dict[str, pd.Series] = {}
     component_positions: dict[str, pd.DataFrame] = {}
     for name, rule in TW_TOP1_COMPONENT_RULES.items():
-        eq, pos, _weights = tw_simulate_component(name, rule, close, volume, symbol_map, features)
-        component_equities[name] = eq
-        component_positions[name] = pos
+        for top_n in [1, 2]:
+            leg = f"{name}__TOP{top_n}"
+            leg_rule = dict(rule)
+            leg_rule["n"] = top_n
+            eq, pos, _weights = tw_simulate_component(leg, leg_rule, close, volume, symbol_map, features)
+            component_equities[leg] = eq.rename(leg)
+            component_positions[leg] = pos
     component_eq = pd.concat(component_equities, axis=1)
     switch_modes, latest_mode_series = tw_select_top1_component(component_eq)
     latest_component = str(latest_mode_series.iloc[0])
@@ -3297,11 +3326,11 @@ def run_tw_top1_daily(state: dict[str, Any]) -> dict[str, Any]:
     rebalance_due_next_session = (not rebalance_due_today) and (trading_days_since_rebalance + 1 >= rebalance_step)
     rebalance_days_remaining = max(0, rebalance_step - trading_days_since_rebalance)
     if rebalance_due_today:
-        action_signal = "rebalance_top2_h46_target"
+        action_signal = "rebalance_top1_top2_switch_target"
     elif rebalance_due_next_session:
         action_signal = "next_session_rebalance_pending"
     else:
-        action_signal = "hold_top2_h46_target"
+        action_signal = "hold_top1_top2_switch_target"
 
     mp2 = symbol_map.drop_duplicates("symbol").set_index("symbol")
     stock_weights: dict[str, float] = {}
@@ -3324,7 +3353,7 @@ def run_tw_top1_daily(state: dict[str, Any]) -> dict[str, Any]:
                 "symbol": sym,
                 "name": meta.get("name", "") if hasattr(meta, "get") else "",
                 "theme": meta.get("strategy_group", "") if hasattr(meta, "get") else "",
-                "role": f"top2_h46_{latest_component}",
+                "role": f"top1_top2_switch_{latest_component}",
                 "target_weight": float(weight),
             }
         )
@@ -3356,7 +3385,7 @@ def run_tw_top1_daily(state: dict[str, Any]) -> dict[str, Any]:
         if live_selection:
             comp_weights = tw_component_stock_weights_at(
                 component,
-                TW_TOP1_COMPONENT_RULES[component],
+                tw_rule_for_leg(component),
                 close,
                 symbol_map,
                 features,
@@ -3402,11 +3431,11 @@ def run_tw_top1_daily(state: dict[str, Any]) -> dict[str, Any]:
         "generated_at": datetime.now().isoformat(timespec="seconds"),
         "frozen_strategy": TW_PRODUCTION_STRATEGY_ID,
         "execution_overlay": "TW_EQUAL_WEIGHT",
-        "strategy_mode": "top2_h46_strategy_switch",
+        "strategy_mode": TW_PRODUCTION_STRATEGY_MODE,
         "outer_mode": latest_component,
         "theme_alloc": 1.0,
         "regime_state": 2,
-        "regime_state_label": "top2_h46_switch",
+        "regime_state_label": TW_PRODUCTION_STRATEGY_MODE,
         "selected_component": latest_component,
         "component_signal_date": latest_mode_row.get("signal_date"),
         "component_rebalance_date": latest_rebalance_date.strftime("%Y-%m-%d"),
@@ -3420,7 +3449,7 @@ def run_tw_top1_daily(state: dict[str, Any]) -> dict[str, Any]:
         "rebalance_count_basis": "execution_date_not_signal_date",
         "action_signal": action_signal,
         "notes": (
-            "TW production target uses clean Top2/H46 strategy switch, then applies execution overlay: equal weight across selected stocks. "
+            "TW production target uses clean Top1/Top2 Switch H46 threshold 0.20, then applies execution overlay: equal weight across selected stocks. "
             "Manual go-live baseline recomputes the initial live target from that baseline close and then holds it until the next live cycle. "
             "No retraining in cloud package."
         ),
@@ -3432,6 +3461,7 @@ def run_tw_top1_daily(state: dict[str, Any]) -> dict[str, Any]:
     pd.DataFrame(target_rows).to_csv(TW_OUT / "latest_target_position.csv", index=False, encoding="utf-8-sig")
     switch_modes.to_csv(TW_OUT / "latest_top1_switch_modes.csv", index=False, encoding="utf-8-sig")
     switch_modes.to_csv(TW_OUT / "latest_top2_h46_switch_modes.csv", index=False, encoding="utf-8-sig")
+    switch_modes.to_csv(TW_OUT / "latest_top1_top2_switch_h46_th020_modes.csv", index=False, encoding="utf-8-sig")
     action_report = {
         "market_state": market_state,
         "target_position": target_rows,

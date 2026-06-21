@@ -197,7 +197,7 @@
     "generated_at": "2026-06-15T17:38:05",
     "frozen_strategy": "TWFXOPT-002067",
     "source_theme": "TWCAT10-002842",
-    "outer_mode": "VALMAX_046612",
+    "outer_mode": "DEFENSE_040838__TOP1",
     "theme_alloc": 0.8,
     "regime_state": 2,
     "regime_state_label": "strong",
@@ -207,45 +207,27 @@
     "notes": "Daily update uses frozen parameters only. It is a signal/pool refresh, not retraining.",
     "target_position": [
       {
-        "symbol": "2492.TW",
-        "name": "華新科",
-        "theme": "passive_component",
-        "role": "top2_h46_VALMAX_046612|equal_weight_exec",
-        "target_weight": 0.5,
-        "raw_target_weight": 0.5,
-        "source_sleeve": "VALMAX_046612",
-        "execution_group": "main",
-        "execution_overlay": "TW_EQUAL_WEIGHT"
-      },
-      {
         "symbol": "2327.TW",
         "name": "國巨*",
         "theme": "passive_component",
-        "role": "top2_h46_VALMAX_046612|equal_weight_exec",
-        "target_weight": 0.5,
-        "raw_target_weight": 0.5,
-        "source_sleeve": "VALMAX_046612",
+        "role": "top1_top2_switch_DEFENSE_040838__TOP1|equal_weight_exec",
+        "target_weight": 1.0,
+        "raw_target_weight": 1.0,
+        "source_sleeve": "DEFENSE_040838__TOP1",
         "execution_group": "main",
         "execution_overlay": "TW_EQUAL_WEIGHT"
       }
     ],
     "raw_target_position": [
       {
-        "symbol": "2492.TW",
-        "name": "華新科",
-        "theme": "passive_component",
-        "role": "top2_h46_VALMAX_046612",
-        "target_weight": 0.5
-      },
-      {
         "symbol": "2327.TW",
         "name": "國巨*",
         "theme": "passive_component",
-        "role": "top2_h46_VALMAX_046612",
-        "target_weight": 0.5
+        "role": "top1_top2_switch_DEFENSE_040838__TOP1",
+        "target_weight": 1.0
       }
     ],
-    "top1_switch_rule": "TW_TOP2_HOLD46_CLEAN",
+    "top1_switch_rule": "TW_TOP1_TOP2_SWITCH_H46_TH020_CLEAN",
     "execution_overlay": "TW_EQUAL_WEIGHT"
   },
   "US": {
@@ -483,5 +465,5 @@
     },
     "dynamic_market_execution_top_n": 4
   },
-  "updated_at": "2026-06-21T22:54:59"
+  "updated_at": "2026-06-21T23:56:43"
 }

@@ -2,18 +2,18 @@
   "market_state": {
     "market": "TW",
     "latest_price_date": "2026-06-18",
-    "generated_at": "2026-06-21T22:54:52",
-    "frozen_strategy": "TW_TOP2_HOLD46_CLEAN",
+    "generated_at": "2026-06-21T23:56:37",
+    "frozen_strategy": "TW_TOP1_TOP2_SWITCH_H46_TH020_CLEAN",
     "execution_overlay": "TW_EQUAL_WEIGHT",
-    "strategy_mode": "top2_h46_strategy_switch",
-    "outer_mode": "VALMAX_046612",
+    "strategy_mode": "top1_top2_switch_h46_th020",
+    "outer_mode": "DEFENSE_040838__TOP1",
     "theme_alloc": 1.0,
     "regime_state": 2,
-    "regime_state_label": "top2_h46_switch",
-    "selected_component": "VALMAX_046612",
+    "regime_state_label": "top1_top2_switch_h46_th020",
+    "selected_component": "DEFENSE_040838__TOP1",
     "component_signal_date": "2026-06-18",
     "component_rebalance_date": "2026-06-18",
-    "component_top_score": 0.5977795397936401,
+    "component_top_score": 0.6451507360937982,
     "rebalance_step_trading_days": 46,
     "trading_days_since_rebalance": 0,
     "trading_days_since_signal": 0,
@@ -22,7 +22,7 @@
     "rebalance_due_next_session_by_counter": false,
     "rebalance_count_basis": "live_go_live_cycle",
     "action_signal": "hold_live_cycle_target",
-    "notes": "TW production target uses clean Top2/H46 strategy switch, then applies execution overlay: equal weight across selected stocks. Manual go-live baseline recomputes the initial live target from that baseline close and then holds it until the next live cycle. No retraining in cloud package. Live cycle starts from 2026-06-18 because formal deployment was reset manually.",
+    "notes": "TW production target uses clean Top1/Top2 Switch H46 threshold 0.20, then applies execution overlay: equal weight across selected stocks. Manual go-live baseline recomputes the initial live target from that baseline close and then holds it until the next live cycle. No retraining in cloud package. Live cycle starts from 2026-06-18 because formal deployment was reset manually.",
     "research_component_rebalance_date": "2026-06-18",
     "live_cycle_rebalance_date": "2026-06-18",
     "live_cycle_source_signal_date": "2026-06-18",
@@ -30,74 +30,90 @@
   },
   "target_position": [
     {
-      "symbol": "2492.TW",
-      "name": "華新科",
-      "theme": "passive_component",
-      "role": "top2_h46_VALMAX_046612|equal_weight_exec",
-      "target_weight": 0.5,
-      "raw_target_weight": 0.5,
-      "source_sleeve": "VALMAX_046612",
-      "execution_group": "main",
-      "execution_overlay": "TW_EQUAL_WEIGHT"
-    },
-    {
       "symbol": "2327.TW",
       "name": "國巨*",
       "theme": "passive_component",
-      "role": "top2_h46_VALMAX_046612|equal_weight_exec",
-      "target_weight": 0.5,
-      "raw_target_weight": 0.5,
-      "source_sleeve": "VALMAX_046612",
+      "role": "top1_top2_switch_DEFENSE_040838__TOP1|equal_weight_exec",
+      "target_weight": 1.0,
+      "raw_target_weight": 1.0,
+      "source_sleeve": "DEFENSE_040838__TOP1",
       "execution_group": "main",
       "execution_overlay": "TW_EQUAL_WEIGHT"
     }
   ],
   "raw_target_position": [
     {
-      "symbol": "2492.TW",
-      "name": "華新科",
-      "theme": "passive_component",
-      "role": "top2_h46_VALMAX_046612",
-      "target_weight": 0.5
-    },
-    {
       "symbol": "2327.TW",
       "name": "國巨*",
       "theme": "passive_component",
-      "role": "top2_h46_VALMAX_046612",
-      "target_weight": 0.5
+      "role": "top1_top2_switch_DEFENSE_040838__TOP1",
+      "target_weight": 1.0
     }
   ],
   "component_scores": [
     {
       "rank": 1,
-      "theme": "VALMAX_046612",
-      "theme_score": 0.5977795397936401,
+      "theme": "DEFENSE_040838__TOP1",
+      "theme_score": 0.6451507360937982,
       "selected": true
     },
     {
       "rank": 2,
-      "theme": "DEFENSE_040838",
-      "theme_score": 0.5635081782806366,
+      "theme": "TOP5_041880__TOP1",
+      "theme_score": 0.6161571994762747,
       "selected": false
     },
     {
       "rank": 3,
-      "theme": "TOP5_041880",
-      "theme_score": 0.5245553425985912,
+      "theme": "VALMAX_046612__TOP1",
+      "theme_score": 0.6161571994762736,
       "selected": false
     },
     {
       "rank": 4,
-      "theme": "BALANCED_058008",
+      "theme": "VALMAX_046612__TOP2",
+      "theme_score": 0.5977795397936401,
+      "selected": false
+    },
+    {
+      "rank": 5,
+      "theme": "DEFENSE_040838__TOP2",
+      "theme_score": 0.5635081782806366,
+      "selected": false
+    },
+    {
+      "rank": 6,
+      "theme": "TOP5_041880__TOP2",
+      "theme_score": 0.5245553425985912,
+      "selected": false
+    },
+    {
+      "rank": 7,
+      "theme": "BALANCED_058008__TOP2",
       "theme_score": 0.28759971284378966,
+      "selected": false
+    },
+    {
+      "rank": 8,
+      "theme": "BALANCED_058008__TOP1",
+      "theme_score": 0.21137999258217818,
       "selected": false
     }
   ],
   "component_candidates": [
     {
       "rank": 1,
-      "component": "DEFENSE_040838",
+      "component": "DEFENSE_040838__TOP1",
+      "symbol": "2327.TW",
+      "name": "國巨*",
+      "theme": "passive_component",
+      "selected_today": true,
+      "component_weight": 1.0,
+      "final_target_weight": 1.0
+    },
+    {
+      "rank": 1,
+      "component": "DEFENSE_040838__TOP2",
       "symbol": "2327.TW",
       "name": "國巨*",
       "theme": "passive_component",
@@ -107,7 +123,7 @@
     },
     {
       "rank": 2,
-      "component": "DEFENSE_040838",
+      "component": "DEFENSE_040838__TOP2",
       "symbol": "2344.TW",
       "name": "華邦電",
       "theme": "dram_nand",
@@ -117,27 +133,17 @@
     },
     {
       "rank": 1,
-      "component": "VALMAX_046612",
+      "component": "VALMAX_046612__TOP1",
       "symbol": "2492.TW",
       "name": "華新科",
       "theme": "passive_component",
-      "selected_today": true,
-      "component_weight": 0.5,
-      "final_target_weight": 0.5
-    },
-    {
-      "rank": 2,
-      "component": "VALMAX_046612",
-      "symbol": "2327.TW",
-      "name": "國巨*",
-      "theme": "passive_component",
-      "selected_today": true,
-      "component_weight": 0.5,
-      "final_target_weight": 0.5
+      "selected_today": false,
+      "component_weight": 1.0,
+      "final_target_weight": 0.0
     },
     {
       "rank": 1,
-      "component": "TOP5_041880",
+      "component": "VALMAX_046612__TOP2",
       "symbol": "2492.TW",
       "name": "華新科",
       "theme": "passive_component",
@@ -147,7 +153,7 @@
     },
     {
       "rank": 2,
-      "component": "TOP5_041880",
+      "component": "VALMAX_046612__TOP2",
       "symbol": "2327.TW",
       "name": "國巨*",
       "theme": "passive_component",
@@ -157,7 +163,17 @@
     },
     {
       "rank": 1,
-      "component": "BALANCED_058008",
+      "component": "TOP5_041880__TOP1",
+      "symbol": "2492.TW",
+      "name": "華新科",
+      "theme": "passive_component",
+      "selected_today": false,
+      "component_weight": 1.0,
+      "final_target_weight": 0.0
+    },
+    {
+      "rank": 1,
+      "component": "TOP5_041880__TOP2",
       "symbol": "2492.TW",
       "name": "華新科",
       "theme": "passive_component",
@@ -167,7 +183,37 @@
     },
     {
       "rank": 2,
-      "component": "BALANCED_058008",
+      "component": "TOP5_041880__TOP2",
+      "symbol": "2327.TW",
+      "name": "國巨*",
+      "theme": "passive_component",
+      "selected_today": false,
+      "component_weight": 0.5,
+      "final_target_weight": 0.0
+    },
+    {
+      "rank": 1,
+      "component": "BALANCED_058008__TOP1",
+      "symbol": "2492.TW",
+      "name": "華新科",
+      "theme": "passive_component",
+      "selected_today": false,
+      "component_weight": 1.0,
+      "final_target_weight": 0.0
+    },
+    {
+      "rank": 1,
+      "component": "BALANCED_058008__TOP2",
+      "symbol": "2492.TW",
+      "name": "華新科",
+      "theme": "passive_component",
+      "selected_today": false,
+      "component_weight": 0.5,
+      "final_target_weight": 0.0
+    },
+    {
+      "rank": 2,
+      "component": "BALANCED_058008__TOP2",
       "symbol": "2327.TW",
       "name": "國巨*",
       "theme": "passive_component",

@@ -2,8 +2,8 @@
   "ok": true,
   "status": "updated",
   "source": "yfinance_target_only",
-  "started_at": "2026-06-21T22:54:59",
-  "finished_at": "2026-06-21T22:55:16",
+  "started_at": "2026-06-21T23:56:43",
+  "finished_at": "2026-06-21T23:56:57",
   "lookback_days": 21,
   "chunk_size": 1,
   "sleep_seconds": 1.0,
@@ -12,13 +12,12 @@
   "retry_sleep_seconds": 12.0,
   "updated_symbols": [
     "TW:2327.TW",
-    "TW:2492.TW",
     "US:ARM",
     "US:MRVL",
     "US:SNDK",
     "US:WDC"
   ],
-  "updated_symbol_count": 6,
+  "updated_symbol_count": 5,
   "current_price_rows": 9,
   "markets": [
     {
@@ -26,15 +25,14 @@
       "status": "updated",
       "start": "2026-05-31",
       "symbols": [
-        "2327.TW",
-        "2492.TW"
+        "2327.TW"
       ],
-      "attempted_symbols": 2,
-      "chunks_attempted": 2,
-      "download_attempts": 2,
+      "attempted_symbols": 1,
+      "chunks_attempted": 1,
+      "download_attempts": 1,
       "retry_attempts": 2,
       "retry_sleep_seconds": 12.0,
-      "updated_symbols": 2,
+      "updated_symbols": 1,
       "skipped_older": [],
       "errors": []
     },

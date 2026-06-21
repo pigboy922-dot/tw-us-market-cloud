@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-06-21T22:54:59",
+  "generated_at": "2026-06-21T23:56:43",
   "package": "CLOUD_DAILY_MARKET_POOL",
   "data_mode": "compact_tail",
   "TW": {
     "latest_price_date": "2026-06-18",
-    "outer_mode": "VALMAX_046612",
+    "outer_mode": "DEFENSE_040838__TOP1",
     "theme_alloc": 1.0,
     "regime_state": 2,
     "component_signal_date": "2026-06-18",
@@ -17,24 +17,13 @@
     "rebalance_due_next_session_by_counter": false,
     "target_position": [
       {
-        "symbol": "2492.TW",
-        "name": "華新科",
-        "theme": "passive_component",
-        "role": "top2_h46_VALMAX_046612|equal_weight_exec",
-        "target_weight": 0.5,
-        "raw_target_weight": 0.5,
-        "source_sleeve": "VALMAX_046612",
-        "execution_group": "main",
-        "execution_overlay": "TW_EQUAL_WEIGHT"
-      },
-      {
         "symbol": "2327.TW",
         "name": "國巨*",
         "theme": "passive_component",
-        "role": "top2_h46_VALMAX_046612|equal_weight_exec",
-        "target_weight": 0.5,
-        "raw_target_weight": 0.5,
-        "source_sleeve": "VALMAX_046612",
+        "role": "top1_top2_switch_DEFENSE_040838__TOP1|equal_weight_exec",
+        "target_weight": 1.0,
+        "raw_target_weight": 1.0,
+        "source_sleeve": "DEFENSE_040838__TOP1",
         "execution_group": "main",
         "execution_overlay": "TW_EQUAL_WEIGHT"
       }
@@ -184,7 +173,7 @@
     "notes": "US_SCAN monitors the rolling Top800 market pool. The official US Top1 dynamic-market strategy can select from this live pool when frozen rules pass."
   },
   "files": {
-    "summary": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\02_CLOUD_DEPLOY_REQUIRED\\CLOUD_DAILY_MARKET_POOL_CLOUD_READY\\runtime_outputs\\LATEST_DAILY_MARKET_POOL_SUMMARY.json",
-    "state": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\02_CLOUD_DEPLOY_REQUIRED\\CLOUD_DAILY_MARKET_POOL_CLOUD_READY\\state\\live_state.json"
+    "summary": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\01_LOCAL_RUN_REQUIRED\\CLOUD_DAILY_MARKET_POOL\\runtime_outputs\\LATEST_DAILY_MARKET_POOL_SUMMARY.json",
+    "state": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\01_LOCAL_RUN_REQUIRED\\CLOUD_DAILY_MARKET_POOL\\state\\live_state.json"
   }
 }

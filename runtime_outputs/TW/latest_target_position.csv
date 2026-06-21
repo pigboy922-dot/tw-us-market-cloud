@@ -1,3 +1,2 @@
 ﻿symbol,name,theme,role,target_weight,raw_target_weight,source_sleeve,execution_group,execution_overlay
-2492.TW,華新科,passive_component,top2_h46_VALMAX_046612|equal_weight_exec,0.5,0.5,VALMAX_046612,main,TW_EQUAL_WEIGHT
-2327.TW,國巨*,passive_component,top2_h46_VALMAX_046612|equal_weight_exec,0.5,0.5,VALMAX_046612,main,TW_EQUAL_WEIGHT
+2327.TW,國巨*,passive_component,top1_top2_switch_DEFENSE_040838__TOP1|equal_weight_exec,1.0,1.0,DEFENSE_040838__TOP1,main,TW_EQUAL_WEIGHT
