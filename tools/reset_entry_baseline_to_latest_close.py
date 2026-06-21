@@ -91,7 +91,7 @@ def latest_close_rows(market: str, symbols: list[str]) -> list[dict[str, Any]]:
     return out
 
 
-def main() -> None:
+def reset_entry_baseline_to_latest_close() -> dict[str, Any]:
     all_rows: list[dict[str, Any]] = []
     report: dict[str, Any] = {
         "ok": True,
@@ -113,6 +113,11 @@ def main() -> None:
     report["baseline_path"] = str(build_dashboard.ENTRY_BASELINE_PATH)
     report["total_reset_count"] = len(all_rows)
     write_json(REPORT_PATH, report)
+    return report
+
+
+def main() -> None:
+    report = reset_entry_baseline_to_latest_close()
     print(json.dumps(report, ensure_ascii=False, indent=2, default=str))
 
 

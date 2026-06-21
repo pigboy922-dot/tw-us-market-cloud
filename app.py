@@ -18,9 +18,10 @@ import engine
 from tools.update_live_prices import update_live_prices
 from tools.refresh_target_current_prices import refresh_target_current_prices
 from tools.export_excel_record import export_excel_record
+from tools.reset_entry_baseline_to_latest_close import reset_entry_baseline_to_latest_close
 
 
-APP_VERSION = "1.0.2-render-seed-gzip"
+APP_VERSION = "1.0.3-entry-baseline-reset"
 
 app = FastAPI(title="Daily Market Pool Cloud", version=APP_VERSION)
 
@@ -229,6 +230,21 @@ async def save_current_prices(request: Request) -> JSONResponse:
         dashboard = build_dashboard.main()
         excel_record = safe_export_excel_record()
         return JSONResponse({"ok": True, "prices": prices, "dashboard": str(dashboard), "excel_record": excel_record})
+    except Exception as exc:
+        return JSONResponse(
+            {"ok": False, "error": str(exc), "traceback": traceback.format_exc(limit=8)},
+            status_code=500,
+        )
+
+
+@app.post("/api/reset-entry-baseline")
+def reset_entry_baseline() -> JSONResponse:
+    try:
+        engine.run_update()
+        report = reset_entry_baseline_to_latest_close()
+        dashboard = build_dashboard.main()
+        excel_record = safe_export_excel_record()
+        return JSONResponse({"ok": True, "report": report, "dashboard": str(dashboard), "excel_record": excel_record})
     except Exception as exc:
         return JSONResponse(
             {"ok": False, "error": str(exc), "traceback": traceback.format_exc(limit=8)},
