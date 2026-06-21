@@ -1,0 +1,6 @@
+fastapi>=0.115,<1
+uvicorn[standard]>=0.34,<1
+pandas>=2.0
+numpy>=1.24
+yfinance>=0.2.40
+openpyxl>=3.1
