@@ -6,7 +6,7 @@ services:
     plan: standard
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
-    autoDeploy: false
+    autoDeploy: true
     disk:
       name: daily-market-pool-data
       mountPath: /var/data
