@@ -4,6 +4,7 @@ import os
 import shutil
 import threading
 import traceback
+import gzip
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -48,11 +49,31 @@ def seed_runtime_dir(source: Path, target: Path) -> None:
             shutil.copy2(src, dst)
 
 
+def seed_runtime_gzip_csv(source_dir: Path, target_dir: Path) -> None:
+    required = [
+        "tw_strategy_prices_tail.csv",
+        "us_scan_prices_tail.csv",
+        "us_execution_prices_tail.csv",
+    ]
+    target_dir.mkdir(parents=True, exist_ok=True)
+    overwrite = os.getenv("SEED_PERSISTENT_OVERWRITE", "0").strip().lower() in {"1", "true", "yes"}
+    for name in required:
+        target = target_dir / name
+        gz_source = source_dir / f"{name}.gz"
+        if not gz_source.exists():
+            continue
+        if not overwrite and target.exists() and target.stat().st_size > 1024:
+            continue
+        with gzip.open(gz_source, "rb") as src, target.open("wb") as dst:
+            shutil.copyfileobj(src, dst)
+
+
 @app.on_event("startup")
 def seed_render_persistent_disk() -> None:
     if os.getenv("SEED_PERSISTENT_DATA", "1").strip().lower() in {"0", "false", "no"}:
         return
     seed_runtime_dir(engine.BASE_DIR / "data_live", engine.DATA_DIR)
+    seed_runtime_gzip_csv(engine.BASE_DIR / "data_live", engine.DATA_DIR)
     seed_runtime_dir(engine.BASE_DIR / "runtime_outputs", engine.OUTPUT_DIR)
     state_dir = Path(os.getenv("STATE_DIR", engine.BASE_DIR / "state"))
     seed_runtime_dir(engine.BASE_DIR / "state", state_dir)
