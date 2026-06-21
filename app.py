@@ -29,10 +29,23 @@ CLOUD_UPDATE_JOB_ID = ""
 
 
 def seed_runtime_dir(source: Path, target: Path) -> None:
-    if not source.exists() or target.exists():
+    if not source.exists():
         return
-    target.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copytree(source, target)
+    overwrite = os.getenv("SEED_PERSISTENT_OVERWRITE", "0").strip().lower() in {"1", "true", "yes"}
+    if source.is_file():
+        target.parent.mkdir(parents=True, exist_ok=True)
+        if overwrite or not target.exists():
+            shutil.copy2(source, target)
+        return
+    target.mkdir(parents=True, exist_ok=True)
+    for src in source.rglob("*"):
+        rel = src.relative_to(source)
+        dst = target / rel
+        if src.is_dir():
+            dst.mkdir(parents=True, exist_ok=True)
+        elif overwrite or not dst.exists():
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(src, dst)
 
 
 @app.on_event("startup")
