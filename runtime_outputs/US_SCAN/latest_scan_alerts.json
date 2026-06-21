@@ -1,0 +1,138 @@
+{
+  "latest_price_date": "2026-06-18",
+  "scan_universe_symbols": 812,
+  "official_selected_themes": [],
+  "official_target_symbols": [
+    "ARM",
+    "MRVL",
+    "SNDK",
+    "WDC"
+  ],
+  "outside_execution_count_in_top20": 11,
+  "top_outside_execution_symbols": [
+    {
+      "rank": 1,
+      "symbol": "SNDK",
+      "scan_theme": "memory_storage",
+      "scan_score": 2.939398198017032,
+      "mom63_skip5_pct": 204.0480248693453
+    },
+    {
+      "rank": 3,
+      "symbol": "AEHR",
+      "scan_theme": "semi_equipment",
+      "scan_score": 1.644513984068738,
+      "mom63_skip5_pct": 173.65204410012765
+    },
+    {
+      "rank": 4,
+      "symbol": "AXTI",
+      "scan_theme": "compound_semiconductor",
+      "scan_score": 1.5940509541011194,
+      "mom63_skip5_pct": 89.04343505941108
+    },
+    {
+      "rank": 7,
+      "symbol": "AAOI",
+      "scan_theme": "optical_communication",
+      "scan_score": 1.479371056152286,
+      "mom63_skip5_pct": 62.70834806189389
+    },
+    {
+      "rank": 9,
+      "symbol": "DOCN",
+      "scan_theme": "cloud_infra",
+      "scan_score": 1.3839409248630619,
+      "mom63_skip5_pct": 163.893078795906
+    },
+    {
+      "rank": 10,
+      "symbol": "ALAB",
+      "scan_theme": "ai_data_center_connectivity",
+      "scan_score": 1.3676786030149184,
+      "mom63_skip5_pct": 206.4803974513623
+    },
+    {
+      "rank": 13,
+      "symbol": "STM",
+      "scan_theme": "power_semiconductor",
+      "scan_score": 1.2043178325218125,
+      "mom63_skip5_pct": 135.68805519136146
+    },
+    {
+      "rank": 15,
+      "symbol": "HUT",
+      "scan_theme": "crypto_infra",
+      "scan_score": 1.1031998153407854,
+      "mom63_skip5_pct": 139.616801328464
+    },
+    {
+      "rank": 16,
+      "symbol": "UMC",
+      "scan_theme": "us_unclassified",
+      "scan_score": 1.0632015573727478,
+      "mom63_skip5_pct": 121.17646482839062
+    },
+    {
+      "rank": 18,
+      "symbol": "FLEX",
+      "scan_theme": "electronics_manufacturing",
+      "scan_score": 1.017827712007225,
+      "mom63_skip5_pct": 140.11059609014617
+    }
+  ],
+  "top_outside_scan_themes": [
+    {
+      "rank": 1,
+      "scan_theme": "memory_storage",
+      "theme_score": 2.093538289603709,
+      "member_count": 4,
+      "execution_pool_member_count": 3,
+      "top_symbols": "SNDK|MU|STX|WDC",
+      "top_outside_execution_symbols": "SNDK"
+    },
+    {
+      "rank": 2,
+      "scan_theme": "ai_compute",
+      "theme_score": 1.3109314523264324,
+      "member_count": 5,
+      "execution_pool_member_count": 5,
+      "top_symbols": "MRVL|ARM|AMD|AVGO|NVDA",
+      "top_outside_execution_symbols": ""
+    },
+    {
+      "rank": 3,
+      "scan_theme": "semi_foundry_idm",
+      "theme_score": 1.0369000828121582,
+      "member_count": 3,
+      "execution_pool_member_count": 3,
+      "top_symbols": "INTC|GFS|TSM",
+      "top_outside_execution_symbols": ""
+    },
+    {
+      "rank": 4,
+      "scan_theme": "optical_communication",
+      "theme_score": 1.006594901376235,
+      "member_count": 3,
+      "execution_pool_member_count": 0,
+      "top_symbols": "AAOI|LITE|POET",
+      "top_outside_execution_symbols": "AAOI|LITE|POET"
+    },
+    {
+      "rank": 5,
+      "scan_theme": "server_network",
+      "theme_score": 1.0064009035909842,
+      "member_count": 7,
+      "execution_pool_member_count": 7,
+      "top_symbols": "DELL|HPE|NTAP|CSCO|CIEN|ANET|SMCI",
+      "top_outside_execution_symbols": ""
+    }
+  ],
+  "best_execution_pool_score": 1.8985204924764392,
+  "best_official_target_score": 2.939398198017032,
+  "best_outside_execution_score": 2.939398198017032,
+  "watch_only": false,
+  "feeds_dynamic_market_strategy": true,
+  "feeds_dynamic_formal_strategy": false,
+  "notes": "US_SCAN monitors the rolling Top800 market pool. The official US Top1 dynamic-market strategy can select from this live pool when frozen rules pass."
+}

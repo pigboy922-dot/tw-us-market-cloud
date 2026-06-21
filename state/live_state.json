@@ -1,0 +1,505 @@
+{
+  "version": 1,
+  "seeded_at": "2026-06-19T19:59:58",
+  "source_daily_summary": {
+    "generated_at": "2026-06-15T17:38:44",
+    "tw": {
+      "latest_price_date": "2026-05-07",
+      "outer_mode": "theme",
+      "theme_alloc": 0.8,
+      "action_signal": "hold_target",
+      "top_themes": [
+        {
+          "rank": 1,
+          "theme_code": 109,
+          "theme": "substrate",
+          "theme_score": 1.7885756824907335,
+          "selected": true
+        },
+        {
+          "rank": 2,
+          "theme_code": 83,
+          "theme": "pcb_material",
+          "theme_score": 1.6813086462507627,
+          "selected": true
+        },
+        {
+          "rank": 3,
+          "theme_code": 73,
+          "theme": "optical_communication",
+          "theme_score": 0.9347715551128578,
+          "selected": true
+        },
+        {
+          "rank": 4,
+          "theme_code": 123,
+          "theme": "wafer_material",
+          "theme_score": 0.7747381389700213,
+          "selected": false
+        },
+        {
+          "rank": 5,
+          "theme_code": 37,
+          "theme": "foundry",
+          "theme_score": 0.5379455036618309,
+          "selected": false
+        }
+      ],
+      "target_position": [
+        {
+          "symbol": "2330.TW",
+          "name": "台積電",
+          "role": "core_floor",
+          "target_weight": 0.19999999999999996
+        },
+        {
+          "symbol": "6274.TWO",
+          "name": "台燿",
+          "role": "theme_accelerator",
+          "target_weight": 0.26666666666666666
+        },
+        {
+          "symbol": "4979.TWO",
+          "name": "華星光",
+          "role": "theme_accelerator",
+          "target_weight": 0.26666666666666666
+        },
+        {
+          "symbol": "8358.TWO",
+          "name": "金居",
+          "role": "theme_accelerator",
+          "target_weight": 0.26666666666666666
+        }
+      ]
+    },
+    "us": {
+      "latest_price_date": "2026-05-29",
+      "regime": "risk_on",
+      "gross_cap": 1.25,
+      "rebalance_due_next_session_by_counter": false,
+      "top_themes": [
+        {
+          "theme": "ai_compute",
+          "theme_score": 1.707687008313171,
+          "top2_stock_momentum_mean_pct": 132.33430787762296,
+          "theme_mom63_pct": 76.30098011067665,
+          "theme_mom126_pct": 70.29399280327439,
+          "positive_breadth": 1.0,
+          "top_symbols_by_momentum": "MRVL|AMD|AVGO|NVDA",
+          "rank": 1,
+          "selected": true
+        },
+        {
+          "theme": "memory_storage",
+          "theme_score": 1.5102952922606792,
+          "top2_stock_momentum_mean_pct": 87.77408342660806,
+          "theme_mom63_pct": 82.00219210669198,
+          "theme_mom126_pct": 224.36525444968177,
+          "positive_breadth": 1.0,
+          "top_symbols_by_momentum": "STX|MU|WDC",
+          "rank": 2,
+          "selected": true
+        },
+        {
+          "theme": "server_network",
+          "theme_score": 1.2064331564775297,
+          "top2_stock_momentum_mean_pct": 91.35698420447258,
+          "theme_mom63_pct": 47.061082128635725,
+          "theme_mom126_pct": 67.78671203126446,
+          "positive_breadth": 1.0,
+          "top_symbols_by_momentum": "DELL|CIEN|HPE|CSCO|NTAP|ANET",
+          "rank": 3,
+          "selected": false
+        },
+        {
+          "theme": "space_ev_defense",
+          "theme_score": 0.9777936838218478,
+          "top2_stock_momentum_mean_pct": 88.8193911538996,
+          "theme_mom63_pct": 5.660302888824244,
+          "theme_mom126_pct": 33.26106059273754,
+          "positive_breadth": 0.45454545454545453,
+          "top_symbols_by_momentum": "IRDM|RKLB|ASTS|JOBY|TSLA|BA",
+          "rank": 4,
+          "selected": false
+        },
+        {
+          "theme": "thermal_power",
+          "theme_score": 0.5816509124062984,
+          "top2_stock_momentum_mean_pct": 44.378445921869634,
+          "theme_mom63_pct": 11.360692570221909,
+          "theme_mom126_pct": 47.76101222271946,
+          "positive_breadth": 0.6428571428571429,
+          "top_symbols_by_momentum": "POWL|NVT|VRT|AAON|FIX|MOD",
+          "rank": 5,
+          "selected": false
+        }
+      ],
+      "target_position_if_rebalanced": [
+        {
+          "symbol": "MRVL",
+          "theme": "ai_compute",
+          "role": "core_leader",
+          "target_weight": 0.1625
+        },
+        {
+          "symbol": "AMD",
+          "theme": "ai_compute",
+          "role": "accelerator",
+          "target_weight": 0.1625
+        },
+        {
+          "symbol": "AVGO",
+          "theme": "ai_compute",
+          "role": "accelerator",
+          "target_weight": 0.1625
+        },
+        {
+          "symbol": "NVDA",
+          "theme": "ai_compute",
+          "role": "accelerator",
+          "target_weight": 0.1625
+        },
+        {
+          "symbol": "STX",
+          "theme": "memory_storage",
+          "role": "core_leader",
+          "target_weight": 0.0625
+        },
+        {
+          "symbol": "MU",
+          "theme": "memory_storage",
+          "role": "accelerator",
+          "target_weight": 0.0625
+        },
+        {
+          "symbol": "WDC",
+          "theme": "memory_storage",
+          "role": "accelerator",
+          "target_weight": 0.0625
+        },
+        {
+          "symbol": "CASH",
+          "theme": "cash",
+          "role": "residual_cash",
+          "target_weight": 0.16249999999999998
+        }
+      ]
+    },
+    "files": {
+      "tw_dir": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\FINAL_RULE_ANALYSIS_REPORTS\\DAILY_MARKET_POOL\\TW",
+      "us_dir": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\FINAL_RULE_ANALYSIS_REPORTS\\DAILY_MARKET_POOL\\US",
+      "summary": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\FINAL_RULE_ANALYSIS_REPORTS\\DAILY_MARKET_POOL\\LATEST_DAILY_MARKET_POOL_SUMMARY.json"
+    }
+  },
+  "TW": {
+    "market": "TW",
+    "latest_price_date": "2026-06-15",
+    "generated_at": "2026-06-15T17:38:05",
+    "frozen_strategy": "TWFXOPT-002067",
+    "source_theme": "TWCAT10-002842",
+    "outer_mode": "DEFENSE_040838",
+    "theme_alloc": 0.8,
+    "regime_state": 2,
+    "regime_state_label": "strong",
+    "action_signal": "hold_target",
+    "uses_2024_2026_for_tuning": false,
+    "data_note": "TW common-stock strategy runtime latest date can be earlier than ETF-only latest dates in all_tw_prices.csv.",
+    "notes": "Daily update uses frozen parameters only. It is a signal/pool refresh, not retraining.",
+    "target_position": [
+      {
+        "symbol": "2327.TW",
+        "name": "國巨*",
+        "theme": "passive_component",
+        "role": "top1_DEFENSE_040838|equal_weight_exec",
+        "target_weight": 0.3333333333333333,
+        "raw_target_weight": 0.35,
+        "source_sleeve": "DEFENSE_040838",
+        "execution_group": "main",
+        "execution_overlay": "TW_EQUAL_WEIGHT"
+      },
+      {
+        "symbol": "2454.TW",
+        "name": "聯發科",
+        "theme": "ic_design_mobile",
+        "role": "top1_DEFENSE_040838|equal_weight_exec",
+        "target_weight": 0.3333333333333333,
+        "raw_target_weight": 0.35,
+        "source_sleeve": "DEFENSE_040838",
+        "execution_group": "main",
+        "execution_overlay": "TW_EQUAL_WEIGHT"
+      },
+      {
+        "symbol": "3189.TW",
+        "name": "景碩",
+        "theme": "substrate",
+        "role": "top1_DEFENSE_040838|equal_weight_exec",
+        "target_weight": 0.3333333333333333,
+        "raw_target_weight": 0.3,
+        "source_sleeve": "DEFENSE_040838",
+        "execution_group": "main",
+        "execution_overlay": "TW_EQUAL_WEIGHT"
+      }
+    ],
+    "raw_target_position": [
+      {
+        "symbol": "2327.TW",
+        "name": "國巨*",
+        "theme": "passive_component",
+        "role": "top1_DEFENSE_040838",
+        "target_weight": 0.35
+      },
+      {
+        "symbol": "2454.TW",
+        "name": "聯發科",
+        "theme": "ic_design_mobile",
+        "role": "top1_DEFENSE_040838",
+        "target_weight": 0.35
+      },
+      {
+        "symbol": "3189.TW",
+        "name": "景碩",
+        "theme": "substrate",
+        "role": "top1_DEFENSE_040838",
+        "target_weight": 0.3
+      }
+    ],
+    "top1_switch_rule": "TWSWENS-002469",
+    "execution_overlay": "TW_EQUAL_WEIGHT"
+  },
+  "US": {
+    "market": "US",
+    "latest_price_date": "2026-06-18",
+    "generated_at": "2026-06-15T17:38:44",
+    "frozen_strategy": "US_FINAL_DEPLOYABLE_V30_CAP65_ATTACK",
+    "regime": "risk_on",
+    "base_risk_on": true,
+    "weak_confirmed_3d": false,
+    "hard_confirmed_3d": false,
+    "gross_cap": 1.25,
+    "smh_mom63_pct": 47.3853876694474,
+    "xlk_mom21_pct": 20.055309873484678,
+    "xlk_mom63_pct": 37.833325736291016,
+    "accelerator_enabled_if_rebalanced": true,
+    "latest_backtest_step": 2126,
+    "rebalance_step_trading_days": 10,
+    "rebalance_due_next_session_by_counter": false,
+    "uses_2025_2026_for_tuning": false,
+    "notes": "Daily update uses frozen V30 parameters. It refreshes pool and target-if-rebalanced only.",
+    "target_position": [
+      {
+        "symbol": "MRVL",
+        "theme": "ai_compute",
+        "role": "core_leader",
+        "target_weight": 0.1625
+      },
+      {
+        "symbol": "AMD",
+        "theme": "ai_compute",
+        "role": "accelerator",
+        "target_weight": 0.1625
+      },
+      {
+        "symbol": "AVGO",
+        "theme": "ai_compute",
+        "role": "accelerator",
+        "target_weight": 0.1625
+      },
+      {
+        "symbol": "NVDA",
+        "theme": "ai_compute",
+        "role": "accelerator",
+        "target_weight": 0.1625
+      },
+      {
+        "symbol": "STX",
+        "theme": "memory_storage",
+        "role": "core_leader",
+        "target_weight": 0.0625
+      },
+      {
+        "symbol": "MU",
+        "theme": "memory_storage",
+        "role": "accelerator",
+        "target_weight": 0.0625
+      },
+      {
+        "symbol": "WDC",
+        "theme": "memory_storage",
+        "role": "accelerator",
+        "target_weight": 0.0625
+      },
+      {
+        "symbol": "CASH",
+        "theme": "cash",
+        "role": "residual_cash",
+        "target_weight": 0.1624999999999999
+      }
+    ],
+    "target_position_if_rebalanced": [
+      {
+        "symbol": "SNDK",
+        "name": "Sandisk Corporation - Common Stock When-Issued",
+        "theme": "memory_storage",
+        "role": "top4_TOP5_R800_N5_COMBO",
+        "target_weight": 0.25,
+        "source_sleeve": "TOP5_R800_N5_COMBO",
+        "scan_score": 3.6065514989531824
+      },
+      {
+        "symbol": "ARM",
+        "name": "Arm Holdings plc - American Depositary Shares",
+        "theme": "ai_compute",
+        "role": "top4_TOP5_R800_N5_COMBO",
+        "target_weight": 0.25,
+        "source_sleeve": "TOP5_R800_N5_COMBO",
+        "scan_score": 1.865391188378607
+      },
+      {
+        "symbol": "MRVL",
+        "name": "Marvell Technology, Inc. - Common Stock",
+        "theme": "ai_compute",
+        "role": "top4_TOP5_R800_N5_COMBO",
+        "target_weight": 0.25,
+        "source_sleeve": "TOP5_R800_N5_COMBO",
+        "scan_score": 1.7974691202228756
+      },
+      {
+        "symbol": "WDC",
+        "name": "Western Digital Corporation - Common Stock",
+        "theme": "memory_storage",
+        "role": "top4_TOP5_R800_N5_COMBO",
+        "target_weight": 0.25,
+        "source_sleeve": "TOP5_R800_N5_COMBO",
+        "scan_score": 1.714474087202342
+      }
+    ],
+    "raw_combo_target_position_if_rebalanced": [
+      {
+        "symbol": "STX",
+        "theme": "memory_storage",
+        "role": "core_leader",
+        "target_weight": 0.26187499999999997,
+        "source_sleeve": "V30_CAP65_ATTACK+V31_MAX_PROFIT+US981A_TRAIN_ONLY",
+        "execution_group": "main"
+      },
+      {
+        "symbol": "MU",
+        "theme": "memory_storage",
+        "role": "accelerator",
+        "target_weight": 0.26187499999999997,
+        "source_sleeve": "V30_CAP65_ATTACK+V31_MAX_PROFIT+US981A_TRAIN_ONLY",
+        "execution_group": "main"
+      },
+      {
+        "symbol": "INTC",
+        "theme": "us981a_ai_theme",
+        "role": "theme_leader",
+        "target_weight": 0.17333333333333334,
+        "source_sleeve": "US981A_TRAIN_ONLY",
+        "execution_group": "main"
+      },
+      {
+        "symbol": "WDC",
+        "theme": "memory_storage",
+        "role": "accelerator",
+        "target_weight": 0.08854166666666666,
+        "source_sleeve": "V30_CAP65_ATTACK+V31_MAX_PROFIT",
+        "execution_group": "main"
+      },
+      {
+        "symbol": "MRVL",
+        "theme": "ai_compute",
+        "role": "core_leader",
+        "target_weight": 0.04604166666666667,
+        "source_sleeve": "V30_CAP65_ATTACK",
+        "execution_group": "main"
+      },
+      {
+        "symbol": "AMD",
+        "theme": "ai_compute",
+        "role": "accelerator",
+        "target_weight": 0.04604166666666667,
+        "source_sleeve": "V30_CAP65_ATTACK",
+        "execution_group": "main"
+      },
+      {
+        "symbol": "AVGO",
+        "theme": "ai_compute",
+        "role": "accelerator",
+        "target_weight": 0.04604166666666667,
+        "source_sleeve": "V30_CAP65_ATTACK",
+        "execution_group": "main"
+      },
+      {
+        "symbol": "NVDA",
+        "theme": "ai_compute",
+        "role": "accelerator",
+        "target_weight": 0.04604166666666667,
+        "source_sleeve": "V30_CAP65_ATTACK",
+        "execution_group": "main"
+      },
+      {
+        "symbol": "CIEN",
+        "theme": "server_network",
+        "role": "core_leader",
+        "target_weight": 0.010625,
+        "source_sleeve": "V31_MAX_PROFIT",
+        "execution_group": "micro"
+      },
+      {
+        "symbol": "DELL",
+        "theme": "server_network",
+        "role": "accelerator",
+        "target_weight": 0.010625,
+        "source_sleeve": "V31_MAX_PROFIT",
+        "execution_group": "micro"
+      },
+      {
+        "symbol": "HPE",
+        "theme": "server_network",
+        "role": "accelerator",
+        "target_weight": 0.010625,
+        "source_sleeve": "V31_MAX_PROFIT",
+        "execution_group": "micro"
+      },
+      {
+        "symbol": "CSCO",
+        "theme": "server_network",
+        "role": "accelerator",
+        "target_weight": 0.010625,
+        "source_sleeve": "V31_MAX_PROFIT",
+        "execution_group": "micro"
+      },
+      {
+        "symbol": "NTAP",
+        "theme": "server_network",
+        "role": "accelerator",
+        "target_weight": 0.010625,
+        "source_sleeve": "V31_MAX_PROFIT",
+        "execution_group": "micro"
+      }
+    ],
+    "execution_overlay": "US_TOP6_CAP25_FROM_COMBO",
+    "dynamic_formal_gate": {
+      "active": false,
+      "dynamic_weight": 0.0,
+      "reason": "gate_off",
+      "scan_staleness_days": 0,
+      "relative_value": 1.1928605821913167,
+      "relative_ma": 1.2836206694242844,
+      "dynamic_mom_pct": 37.19404142980718,
+      "dynamic_dd_pct": -7.4634826991961445
+    },
+    "dynamic_market_selected_component": "TOP5_R800_N5_COMBO",
+    "dynamic_market_switch_rule": {
+      "strategy_name": "US_TOP1_DYNAMIC_MARKET_SW_recent_RB10_MIN10_STAY0",
+      "score": "recent",
+      "rebalance_n": 10,
+      "min_top_score": 0.1,
+      "stay_bonus": 0.0,
+      "fallback": "LONG_R800_N5_LONG"
+    },
+    "dynamic_market_execution_top_n": 4
+  },
+  "updated_at": "2026-06-20T07:26:26"
+}

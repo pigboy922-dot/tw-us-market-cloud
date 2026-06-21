@@ -1,0 +1,31 @@
+{
+  "production_name": "US_DYNAMIC_MARKET_TOP4_CLEAN",
+  "strategy_type": "us_top1_dynamic_market_like_tw",
+  "status": "FROZEN_FOR_GO_LIVE",
+  "source_research_output": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\FINAL_RULE_ANALYSIS_REPORTS\\US_DYNAMIC_MARKET_TOPN_1_6_CLEAN_20260619",
+  "source_input_file": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\data_raw\\all_us_prices_full.csv",
+  "small_csv_not_used": true,
+  "network_refetch": false,
+  "selection_uses_2024": false,
+  "selection_uses_2025_2026": false,
+  "training_window": [
+    "2018-01-02",
+    "2023-12-29"
+  ],
+  "validation_window_report_only": [
+    "2024-01-02",
+    "2024-12-31"
+  ],
+  "opened_holdout_window_report_only": [
+    "2025-01-02",
+    "2026-05-29"
+  ],
+  "market_pool": "rolling full-market non-ETF common stocks; recent 60D median dollar-volume Top800 rebuilt from all_us_prices_full.csv",
+  "new_listing_rule": "Symbols can enter after enough observations and passing rolling liquidity/rank filters; weak symbols fall out automatically.",
+  "signal_timing": "close-derived signal at signal date; target shown for next trading session execution",
+  "execution_overlay": "US_DYNAMIC_MARKET_TOP4_CAP25",
+  "execution_top_n": 4,
+  "single_stock_cap": 0.25,
+  "topn_selection_contract": "2018-2023 clean comparison selected current switch settings with Top4 execution as the practical go-live version; 2024 and 2025-2026 were report-only checks.",
+  "notes": "Engine owns the frozen component rules for this strategy. This JSON is the production switch and audit record; cloud rebuilds must not overwrite it with older combo rules. US execution is Top4 with 25% single-stock cap."
+}

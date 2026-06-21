@@ -1,0 +1,201 @@
+{
+  "generated_at": "2026-06-20T07:26:26",
+  "package": "CLOUD_DAILY_MARKET_POOL",
+  "data_mode": "compact_tail",
+  "TW": {
+    "latest_price_date": "2026-06-15",
+    "outer_mode": "DEFENSE_040838",
+    "theme_alloc": 1.0,
+    "regime_state": 2,
+    "component_signal_date": "2026-06-11",
+    "component_rebalance_date": "2026-06-12",
+    "rebalance_step_trading_days": 5,
+    "trading_days_since_rebalance": 1,
+    "trading_days_since_signal": 2,
+    "rebalance_days_remaining": 4,
+    "rebalance_due_today_by_counter": false,
+    "rebalance_due_next_session_by_counter": false,
+    "target_position": [
+      {
+        "symbol": "2327.TW",
+        "name": "國巨*",
+        "theme": "passive_component",
+        "role": "top1_DEFENSE_040838|equal_weight_exec",
+        "target_weight": 0.3333333333333333,
+        "raw_target_weight": 0.35,
+        "source_sleeve": "DEFENSE_040838",
+        "execution_group": "main",
+        "execution_overlay": "TW_EQUAL_WEIGHT"
+      },
+      {
+        "symbol": "2454.TW",
+        "name": "聯發科",
+        "theme": "ic_design_mobile",
+        "role": "top1_DEFENSE_040838|equal_weight_exec",
+        "target_weight": 0.3333333333333333,
+        "raw_target_weight": 0.35,
+        "source_sleeve": "DEFENSE_040838",
+        "execution_group": "main",
+        "execution_overlay": "TW_EQUAL_WEIGHT"
+      },
+      {
+        "symbol": "3189.TW",
+        "name": "景碩",
+        "theme": "substrate",
+        "role": "top1_DEFENSE_040838|equal_weight_exec",
+        "target_weight": 0.3333333333333333,
+        "raw_target_weight": 0.3,
+        "source_sleeve": "DEFENSE_040838",
+        "execution_group": "main",
+        "execution_overlay": "TW_EQUAL_WEIGHT"
+      }
+    ]
+  },
+  "US": {
+    "latest_price_date": "2026-06-18",
+    "regime": "risk_on",
+    "gross_cap": 1.0,
+    "strategy_mode": "top1_dynamic_market_like_tw",
+    "execution_overlay": "US_DYNAMIC_MARKET_TOP4_CAP25",
+    "execution_top_n": 4,
+    "selected_component": "TOP5_R800_N5_COMBO",
+    "component_signal_date": "2026-06-16",
+    "dynamic_market_pool": "rolling Top800 by 60D median dollar volume",
+    "scan_universe_symbols": 812,
+    "dynamic_formal_gate_active": null,
+    "dynamic_formal_gate_reason": null,
+    "dynamic_formal_weight": null,
+    "dynamic_formal_latest_price_date": null,
+    "dynamic_formal_pool_count": null,
+    "component_rebalance_date": "2026-06-10",
+    "rebalance_step_trading_days": 10,
+    "trading_days_since_rebalance": 6,
+    "rebalance_days_remaining": 4,
+    "rebalance_due_today_by_counter": false,
+    "rebalance_due_next_session_by_counter": false,
+    "target_position_if_rebalanced": [
+      {
+        "symbol": "SNDK",
+        "name": "Sandisk Corporation - Common Stock When-Issued",
+        "theme": "memory_storage",
+        "role": "top4_TOP5_R800_N5_COMBO",
+        "target_weight": 0.25,
+        "source_sleeve": "TOP5_R800_N5_COMBO",
+        "scan_score": 3.6065514989531824
+      },
+      {
+        "symbol": "ARM",
+        "name": "Arm Holdings plc - American Depositary Shares",
+        "theme": "ai_compute",
+        "role": "top4_TOP5_R800_N5_COMBO",
+        "target_weight": 0.25,
+        "source_sleeve": "TOP5_R800_N5_COMBO",
+        "scan_score": 1.865391188378607
+      },
+      {
+        "symbol": "MRVL",
+        "name": "Marvell Technology, Inc. - Common Stock",
+        "theme": "ai_compute",
+        "role": "top4_TOP5_R800_N5_COMBO",
+        "target_weight": 0.25,
+        "source_sleeve": "TOP5_R800_N5_COMBO",
+        "scan_score": 1.7974691202228756
+      },
+      {
+        "symbol": "WDC",
+        "name": "Western Digital Corporation - Common Stock",
+        "theme": "memory_storage",
+        "role": "top4_TOP5_R800_N5_COMBO",
+        "target_weight": 0.25,
+        "source_sleeve": "TOP5_R800_N5_COMBO",
+        "scan_score": 1.714474087202342
+      }
+    ]
+  },
+  "US_SCAN": {
+    "latest_price_date": "2026-06-18",
+    "scan_universe_symbols": 812,
+    "top_stock": "SNDK",
+    "top_theme": "memory_storage",
+    "outside_execution_count_in_top20": 11,
+    "top_outside_execution_symbols": [
+      {
+        "rank": 1,
+        "symbol": "SNDK",
+        "scan_theme": "memory_storage",
+        "scan_score": 2.939398198017032,
+        "mom63_skip5_pct": 204.0480248693453
+      },
+      {
+        "rank": 3,
+        "symbol": "AEHR",
+        "scan_theme": "semi_equipment",
+        "scan_score": 1.644513984068738,
+        "mom63_skip5_pct": 173.65204410012765
+      },
+      {
+        "rank": 4,
+        "symbol": "AXTI",
+        "scan_theme": "compound_semiconductor",
+        "scan_score": 1.5940509541011194,
+        "mom63_skip5_pct": 89.04343505941108
+      },
+      {
+        "rank": 7,
+        "symbol": "AAOI",
+        "scan_theme": "optical_communication",
+        "scan_score": 1.479371056152286,
+        "mom63_skip5_pct": 62.70834806189389
+      },
+      {
+        "rank": 9,
+        "symbol": "DOCN",
+        "scan_theme": "cloud_infra",
+        "scan_score": 1.3839409248630619,
+        "mom63_skip5_pct": 163.893078795906
+      },
+      {
+        "rank": 10,
+        "symbol": "ALAB",
+        "scan_theme": "ai_data_center_connectivity",
+        "scan_score": 1.3676786030149184,
+        "mom63_skip5_pct": 206.4803974513623
+      },
+      {
+        "rank": 13,
+        "symbol": "STM",
+        "scan_theme": "power_semiconductor",
+        "scan_score": 1.2043178325218125,
+        "mom63_skip5_pct": 135.68805519136146
+      },
+      {
+        "rank": 15,
+        "symbol": "HUT",
+        "scan_theme": "crypto_infra",
+        "scan_score": 1.1031998153407854,
+        "mom63_skip5_pct": 139.616801328464
+      },
+      {
+        "rank": 16,
+        "symbol": "UMC",
+        "scan_theme": "us_unclassified",
+        "scan_score": 1.0632015573727478,
+        "mom63_skip5_pct": 121.17646482839062
+      },
+      {
+        "rank": 18,
+        "symbol": "FLEX",
+        "scan_theme": "electronics_manufacturing",
+        "scan_score": 1.017827712007225,
+        "mom63_skip5_pct": 140.11059609014617
+      }
+    ],
+    "watch_only": false,
+    "feeds_dynamic_market_strategy": true,
+    "notes": "US_SCAN monitors the rolling Top800 market pool. The official US Top1 dynamic-market strategy can select from this live pool when frozen rules pass."
+  },
+  "files": {
+    "summary": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\CLOUD_DAILY_MARKET_POOL_CLOUD_READY\\runtime_outputs\\LATEST_DAILY_MARKET_POOL_SUMMARY.json",
+    "state": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\CLOUD_DAILY_MARKET_POOL_CLOUD_READY\\state\\live_state.json"
+  }
+}

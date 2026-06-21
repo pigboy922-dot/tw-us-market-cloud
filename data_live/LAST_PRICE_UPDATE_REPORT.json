@@ -1,0 +1,76 @@
+{
+  "ok": true,
+  "status": "updated",
+  "source": "yfinance",
+  "started_at": "2026-06-20T05:50:49",
+  "finished_at": "2026-06-20T05:54:32",
+  "data_dir": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\CLOUD_DAILY_MARKET_POOL\\data_live",
+  "tail_rows_per_symbol": 420,
+  "chunk_size": 20,
+  "sleep_seconds": 1.0,
+  "timeout": 30,
+  "max_symbols_per_file": 0,
+  "daily_safe": false,
+  "new_rows_total": 13087,
+  "possible_source_limit_or_no_new_data": false,
+  "source_rate_limited": false,
+  "max_dates_after": {
+    "US_SCAN": "2026-06-18",
+    "US_EXECUTION": "2026-06-18"
+  },
+  "files": [
+    {
+      "label": "US_SCAN",
+      "status": "updated",
+      "path": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\CLOUD_DAILY_MARKET_POOL\\data_live\\us_scan_prices_tail.csv",
+      "market": "US",
+      "before": {
+        "path": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\CLOUD_DAILY_MARKET_POOL\\data_live\\us_scan_prices_tail.csv",
+        "exists": true,
+        "rows": 334933,
+        "symbols": 812,
+        "min_date": "2024-09-25",
+        "max_date": "2026-05-29"
+      },
+      "after": {
+        "path": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\CLOUD_DAILY_MARKET_POOL\\data_live\\us_scan_prices_tail.csv",
+        "exists": true,
+        "rows": 336937,
+        "symbols": 812,
+        "min_date": "2024-10-09",
+        "max_date": "2026-06-18"
+      },
+      "attempted_symbols": 812,
+      "chunks_attempted": 41,
+      "new_rows": 13087,
+      "updated_symbols": 812,
+      "error_count": 0,
+      "errors_sample": []
+    },
+    {
+      "label": "US_EXECUTION",
+      "status": "synced_from_us_scan",
+      "before": {
+        "path": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\CLOUD_DAILY_MARKET_POOL\\data_live\\us_execution_prices_tail.csv",
+        "exists": true,
+        "rows": 39875,
+        "symbols": 95,
+        "min_date": "2024-09-20",
+        "max_date": "2026-05-29"
+      },
+      "after": {
+        "path": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\CLOUD_DAILY_MARKET_POOL\\data_live\\us_execution_prices_tail.csv",
+        "exists": true,
+        "rows": 39891,
+        "symbols": 95,
+        "min_date": "2024-10-15",
+        "max_date": "2026-06-18"
+      },
+      "attempted_symbols": 0,
+      "new_rows": 0,
+      "updated_symbols": 0,
+      "missing_from_scan": []
+    }
+  ],
+  "tw_map_update": {}
+}

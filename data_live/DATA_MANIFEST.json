@@ -1,0 +1,54 @@
+{
+  "built_at": "2026-06-19T19:59:58",
+  "source_root": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK",
+  "tail_rows_per_symbol": 420,
+  "rules": {
+    "us_rule": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\CLOUD_DAILY_MARKET_POOL\\frozen_rules\\us_rule.json",
+    "tw_selected_rule": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\CLOUD_DAILY_MARKET_POOL\\frozen_rules\\tw_selected_rule.csv",
+    "tw_theme_rule": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\CLOUD_DAILY_MARKET_POOL\\frozen_rules\\tw_theme_rule.csv"
+  },
+  "US": {
+    "path": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\CLOUD_DAILY_MARKET_POOL\\data_live\\us_execution_prices_tail.csv",
+    "execution_path": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\CLOUD_DAILY_MARKET_POOL\\data_live\\us_execution_prices_tail.csv",
+    "symbols": 104,
+    "rows": 39875,
+    "min_date": "2024-09-20",
+    "max_date": "2026-05-29"
+  },
+  "US_SCAN": {
+    "price_path": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\CLOUD_DAILY_MARKET_POOL\\data_live\\us_scan_prices_tail.csv",
+    "universe_path": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\CLOUD_DAILY_MARKET_POOL\\data_live\\us_scan_universe.csv",
+    "scan_top_n": 800,
+    "symbols": 821,
+    "execution_symbols_included": 104,
+    "rows": 334933,
+    "tail_cutoff": "2024-09-25",
+    "rank_cutoff": "2026-03-05",
+    "min_date": "2024-09-25",
+    "max_date": "2026-05-29"
+  },
+  "TW": {
+    "price_path": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\CLOUD_DAILY_MARKET_POOL\\data_live\\tw_strategy_prices_tail.csv",
+    "index_path": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\CLOUD_DAILY_MARKET_POOL\\data_live\\tw_index_prices_tail.csv",
+    "map_path": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\CLOUD_DAILY_MARKET_POOL\\data_live\\tw_strategy_group_map.csv",
+    "symbols": 1973,
+    "rows": 815220,
+    "min_date": "2020-05-08",
+    "max_date": "2026-05-29",
+    "index_rows": 420
+  },
+  "state_seeded": true,
+  "notes": [
+    "This package is for daily signal/holding updates only.",
+    "Use the research pack for retraining, full backtests, and anti-cheat verification."
+  ],
+  "last_price_update": {
+    "finished_at": "2026-06-20T05:54:32",
+    "status": "updated",
+    "new_rows_total": 13087,
+    "max_dates_after": {
+      "US_SCAN": "2026-06-18",
+      "US_EXECUTION": "2026-06-18"
+    }
+  }
+}

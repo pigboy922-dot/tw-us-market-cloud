@@ -1,0 +1,6 @@
+{
+  "ok": true,
+  "status": "skipped_full_market_update_target_only_mode",
+  "mode": "target_only",
+  "note": "Full TW/US market pools were not fetched. The update only refreshes current quotes for existing target/holding symbols after signal recalculation."
+}

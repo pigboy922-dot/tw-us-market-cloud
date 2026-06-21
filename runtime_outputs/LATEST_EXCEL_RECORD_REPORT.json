@@ -1,0 +1,20 @@
+{
+  "ok": true,
+  "exported_at": "2026-06-20T07:26:44",
+  "snapshot_at": "2026-06-20T07:26:26",
+  "excel_path": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\CLOUD_DAILY_MARKET_POOL_CLOUD_READY\\runtime_outputs\\DAILY_MARKET_RECORD.xlsx",
+  "history_path": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\CLOUD_DAILY_MARKET_POOL_CLOUD_READY\\state\\daily_order_history.csv",
+  "order_plan_rows": 7,
+  "history_rows": 28,
+  "sheets": {
+    "Today_Order_Plan": 7,
+    "Order_History": 28,
+    "Market_State": 3,
+    "Target_Position": 7,
+    "Current_Prices": 7,
+    "Current_Holdings": 0,
+    "Update_Report": 1,
+    "Summary": 3,
+    "Target_Price_Refresh": 1
+  }
+}

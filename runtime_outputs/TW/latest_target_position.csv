@@ -1,0 +1,4 @@
+﻿symbol,name,theme,role,target_weight,raw_target_weight,source_sleeve,execution_group,execution_overlay
+2327.TW,國巨*,passive_component,top1_DEFENSE_040838|equal_weight_exec,0.3333333333333333,0.35,DEFENSE_040838,main,TW_EQUAL_WEIGHT
+2454.TW,聯發科,ic_design_mobile,top1_DEFENSE_040838|equal_weight_exec,0.3333333333333333,0.35,DEFENSE_040838,main,TW_EQUAL_WEIGHT
+3189.TW,景碩,substrate,top1_DEFENSE_040838|equal_weight_exec,0.3333333333333333,0.3,DEFENSE_040838,main,TW_EQUAL_WEIGHT

@@ -1,0 +1,2 @@
+﻿candidate_id,group_col,theme_score,stock_score,rebalance_n,category_leader_n,category_top_n,buy_per_category,max_positions,global_rank_cap,require_ma,min_ret20,min_ret60,min_amount_ratio,gap_max,regime_name,strong_enter,strong_exit,normal_enter,weak_score,breadth_ma60_min,breadth_ret20_min,strong_stock_exposure,normal_stock_exposure,weak_core_policy,weak_core_exposure,hard_stop,trailing_stop,exit_rule
+TWCAT10-002842,strategy_group,long,blend_long,10,10,3,3,9,9999,none,0.08,0.15,1.0,0.08,loose_cash,4,3,2,1,0.35,0.45,1.0,0.8,cash,0.0,0.15,0.25,ma60

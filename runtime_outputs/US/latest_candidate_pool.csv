@@ -1,0 +1,86 @@
+﻿rank,component,symbol,name,theme,eligible,selected_today,component_score,final_target_weight,scan_rank_60d_dollar_volume
+1,TOP5_R800_N5_COMBO,SNDK,Sandisk Corporation - Common Stock When-Issued,memory_storage,True,True,3.899667332184502,0.25,6.0
+2,TOP5_R800_N5_COMBO,ARM,Arm Holdings plc - American Depositary Shares,ai_compute,True,True,2.094062755853483,0.25,34.0
+3,TOP5_R800_N5_COMBO,MRVL,"Marvell Technology, Inc. - Common Stock",ai_compute,True,True,1.9799722221805578,0.25,19.0
+4,TOP5_R800_N5_COMBO,WDC,Western Digital Corporation - Common Stock,memory_storage,True,True,1.9212444218075362,0.25,24.0
+5,TOP5_R800_N5_COMBO,AXTI,AXT Inc - Common Stock,compound_semiconductor,False,False,1.9133719567815768,0.0,95.0
+6,TOP5_R800_N5_COMBO,INTC,Intel Corporation - Common Stock,semi_foundry_idm,True,False,1.79398098478378,0.0,9.0
+7,TOP5_R800_N5_COMBO,STX,Seagate Technology Holdings PLC - Ordinary Shares (Ireland),memory_storage,True,False,1.7236254116256222,0.0,35.0
+8,TOP5_R800_N5_COMBO,DELL,Dell Technologies Inc. Class C Common Stock,server_network,True,False,1.5189033929582454,0.0,64.0
+9,TOP5_R800_N5_COMBO,NBIS,Nebius Group N.V. - Class A Ordinary Shares,cloud_ai_infra,True,False,1.4976183831319192,0.0,28.0
+10,TOP5_R800_N5_COMBO,ALAB,"Astera Labs, Inc. - Common Stock",ai_data_center_connectivity,True,False,1.4971749428585657,0.0,70.0
+11,TOP5_R800_N5_COMBO,NVTS,Navitas Semiconductor Corporation - Common Stock,power_semiconductor,True,False,1.4352093231175618,0.0,163.0
+12,TOP5_R800_N5_COMBO,AAOI,"Applied Optoelectronics, Inc. - Common Stock",optical_communication,True,False,1.3805753552633253,0.0,52.0
+13,TOP5_R800_N5_COMBO,STM,STMicroelectronics N.V. Common Stock,power_semiconductor,True,False,1.3772004522273176,0.0,150.0
+14,TOP5_R800_N5_COMBO,DOCN,"DigitalOcean Holdings, Inc. Common Stock",cloud_infra,True,False,1.3545345323791267,0.0,237.0
+15,TOP5_R800_N5_COMBO,AMD,"Advanced Micro Devices, Inc. - Common Stock",ai_compute,True,False,1.1897347076962148,0.0,7.0
+16,TOP5_R800_N5_COMBO,CRDO,Credo Technology Group Holding Ltd - Ordinary Shares,ai_data_center_connectivity,True,False,1.0319059240264488,0.0,72.0
+17,TOP5_R800_N5_COMBO,FLEX,Flex Ltd. - Ordinary Shares,electronics_manufacturing,True,False,0.9931822547404634,0.0,209.0
+18,TOP5_R800_N5_COMBO,GFS,GlobalFoundries Inc. - Ordinary Share,semi_foundry_idm,True,False,0.958900567077785,0.0,442.0
+19,TOP5_R800_N5_COMBO,AMAT,"Applied Materials, Inc. - Common Stock",semi_equipment,True,False,0.9291229458834224,0.0,27.0
+20,TOP5_R800_N5_COMBO,IRDM,Iridium Communications Inc - Common Stock,space_ev_defense,True,False,0.9087575155096019,0.0,774.0
+21,TOP5_R800_N5_COMBO,POWL,"Powell Industries, Inc. - Common Stock",thermal_power,True,False,0.8861321397094672,0.0,630.0
+22,TOP5_R800_N5_COMBO,HPE,Hewlett Packard Enterprise Company Common Stock,server_network,True,False,0.8564581083488023,0.0,204.0
+23,TOP5_R800_N5_COMBO,LRCX,Lam Research Corporation - Common Stock,semi_equipment,True,False,0.8238941844934672,0.0,29.0
+24,TOP5_R800_N5_COMBO,MOD,Modine Manufacturing Company Common Stock,thermal_power,True,False,0.6801111040826954,0.0,382.0
+25,TOP5_R800_N5_COMBO,FIX,"Comfort Systems USA, Inc. Common Stock",thermal_power,True,False,0.6076869877952813,0.0,148.0
+26,TOP5_R800_N5_COMBO,POET,POET Technologies Inc. - Common Shares,optical_communication,False,False,0.606304365193904,0.0,258.0
+27,TOP5_R800_N5_COMBO,AAON,"AAON, Inc. - Common Stock",thermal_power,True,False,0.5713077786919156,0.0,739.0
+28,TOP5_R800_N5_COMBO,ASML,ASML Holding N.V. - New York Registry Shares,semi_equipment,True,False,0.5686446188668813,0.0,31.0
+29,TOP5_R800_N5_COMBO,VRT,"Vertiv Holdings, LLC Class A Common Stock",thermal_power,True,False,0.5240662195624544,0.0,59.0
+30,TOP5_R800_N5_COMBO,NTAP,"NetApp, Inc. - Common Stock",server_network,True,False,0.5160699737419933,0.0,431.0
+31,TOP5_R800_N5_COMBO,LITE,Lumentum Holdings Inc. - Common Stock,optical_communication,True,False,0.5069995809341308,0.0,16.0
+32,TOP5_R800_N5_COMBO,IESC,"IES Holdings, Inc. - Common Stock",grid_engineering,True,False,0.501554601268213,0.0,721.0
+33,TOP5_R800_N5_COMBO,NVT,nVent Electric plc Ordinary Shares,thermal_power,True,False,0.4643608845419862,0.0,361.0
+34,TOP5_R800_N5_COMBO,CSCO,"Cisco Systems, Inc. - Common Stock",server_network,True,False,0.4594129317186583,0.0,49.0
+35,TOP5_R800_N5_COMBO,ECG,"Everus Construction Group, Inc. Common Stock",grid_engineering,False,False,0.4326434023059836,0.0,809.0
+36,TOP5_R800_N5_COMBO,GEV,GE Vernova Inc. Common Stock,grid_engineering,True,False,0.40620229623182397,0.0,39.0
+37,TOP5_R800_N5_COMBO,MTZ,"MasTec, Inc. Common Stock",grid_engineering,True,False,0.39962658702375026,0.0,314.0
+38,TOP5_R800_N5_COMBO,TSM,Taiwan Semiconductor Manufacturing Company Ltd.,semi_foundry_idm,True,False,0.3972374503115212,0.0,18.0
+39,TOP5_R800_N5_COMBO,RKLB,Rocket Lab Corporation - Common Stock,space_ev_defense,False,False,0.39183839121304864,0.0,37.0
+40,TOP5_R800_N5_COMBO,CIEN,Ciena Corporation Common Stock,server_network,False,False,0.3524875054745743,0.0,74.0
+41,TOP5_R800_N5_COMBO,IRM,Iron Mountain Incorporated (Delaware)Common Stock REIT,data_center_reit,True,False,0.33915533044886953,0.0,602.0
+42,TOP5_R800_N5_COMBO,DY,"Dycom Industries, Inc. Common Stock",grid_engineering,True,False,0.3298295508124511,0.0,551.0
+43,TOP5_R800_N5_COMBO,EQIX,"Equinix, Inc. - Common Stock",data_center_reit,True,False,0.2834746191153144,0.0,192.0
+44,TOP5_R800_N5_COMBO,ANET,"Arista Networks, Inc. Common Stock",server_network,True,False,0.2810372114732344,0.0,76.0
+45,TOP5_R800_N5_COMBO,AVGO,Broadcom Inc. - Common Stock,ai_compute,True,False,0.25075687397286894,0.0,14.0
+46,TOP5_R800_N5_COMBO,GVA,Granite Construction Incorporated Common Stock,grid_engineering,False,False,0.2506679538975959,0.0,808.0
+47,TOP5_R800_N5_COMBO,WTS,"Watts Water Technologies, Inc. Class A Common Stock",thermal_power,False,False,0.24310658827338333,0.0,807.0
+48,TOP5_R800_N5_COMBO,ETN,"Eaton Corporation, PLC Ordinary Shares",thermal_power,True,False,0.21032401847035317,0.0,100.0
+49,TOP5_R800_N5_COMBO,EME,"EMCOR Group, Inc. Common Stock",thermal_power,True,False,0.20648411276373652,0.0,351.0
+50,TOP5_R800_N5_COMBO,GOOGL,Alphabet Inc. - Class A Common Stock,software_platform,True,False,0.20521995943541388,0.0,13.0
+51,TOP5_R800_N5_COMBO,SMCI,"Super Micro Computer, Inc. - Common Stock",server_network,False,False,0.1971110362779799,0.0,84.0
+52,TOP5_R800_N5_COMBO,TT,Trane Technologies plc,thermal_power,True,False,0.18729127433819054,0.0,169.0
+53,TOP5_R800_N5_COMBO,JCI,Johnson Controls International plc Ordinary Share,thermal_power,True,False,0.17726734290878846,0.0,203.0
+54,TOP5_R800_N5_COMBO,NVDA,NVIDIA Corporation - Common Stock,ai_compute,True,False,0.160381287601724,0.0,2.0
+55,TOP5_R800_N5_COMBO,HUBB,Hubbell Inc Common Stock,thermal_power,True,False,0.15132108913404949,0.0,348.0
+56,TOP5_R800_N5_COMBO,PL,Planet Labs PBC Class A Common Stock,space_ev_defense,False,False,0.13980621777218774,0.0,227.0
+57,TOP5_R800_N5_COMBO,AEP,"American Electric Power Company, Inc. - Common Stock",power_generation,False,False,0.1302724377736273,0.0,241.0
+58,TOP5_R800_N5_COMBO,ORCL,Oracle Corporation Common Stock,software_platform,False,False,0.11727134670665477,0.0,20.0
+59,TOP5_R800_N5_COMBO,FELE,"Franklin Electric Co., Inc. - Common Stock",thermal_power,False,False,0.11699083013295634,0.0,810.0
+60,TOP5_R800_N5_COMBO,SO,Southern Company (The) Common Stock,power_generation,False,False,0.10393035228352393,0.0,226.0
+61,TOP5_R800_N5_COMBO,VST,Vistra Corp. Common Stock,power_generation,False,False,0.10147755728332138,0.0,149.0
+62,TOP5_R800_N5_COMBO,AMZN,"Amazon.com, Inc. - Common Stock",software_platform,True,False,0.09123523837306222,0.0,11.0
+63,TOP5_R800_N5_COMBO,BA,Boeing Company (The) Common Stock,space_ev_defense,False,False,0.08084976456847169,0.0,68.0
+64,TOP5_R800_N5_COMBO,NEE,"NextEra Energy, Inc. Common Stock",power_generation,False,False,0.06981285979088436,0.0,120.0
+65,TOP5_R800_N5_COMBO,ASTS,"AST SpaceMobile, Inc. - Class A Common Stock",space_ev_defense,False,False,0.06771215856649668,0.0,58.0
+66,TOP5_R800_N5_COMBO,EXC,Exelon Corporation - Common Stock,power_generation,False,False,0.06352819164734053,0.0,306.0
+67,TOP5_R800_N5_COMBO,APG,APi Group Corporation Common Stock,thermal_power,True,False,0.0618059485930271,0.0,760.0
+68,TOP5_R800_N5_COMBO,AMT,American Tower Corporation (REIT) Common Stock,data_center_reit,False,False,0.06110270121812359,0.0,194.0
+69,TOP5_R800_N5_COMBO,DUK,Duke Energy Corporation (Holding Company) Common Stock,power_generation,False,False,0.054906223788359375,0.0,248.0
+70,TOP5_R800_N5_COMBO,CCI,Crown Castle Inc. Common Stock,data_center_reit,False,False,0.04551958670158603,0.0,342.0
+71,TOP5_R800_N5_COMBO,JOBY,"Joby Aviation, Inc. Common Stock",space_ev_defense,False,False,-0.00774817811333349,0.0,415.0
+72,TOP5_R800_N5_COMBO,LMT,Lockheed Martin Corporation Common Stock,space_ev_defense,False,False,-0.0152072632205155,0.0,145.0
+73,TOP5_R800_N5_COMBO,META,"Meta Platforms, Inc. - Class A Common Stock",software_platform,False,False,-0.019988658715107,0.0,12.0
+74,TOP5_R800_N5_COMBO,MSFT,Microsoft Corporation - Common Stock,software_platform,False,False,-0.03990932417791694,0.0,8.0
+75,TOP5_R800_N5_COMBO,CEG,Constellation Energy Corporation - Common Stock When-Issued,power_generation,False,False,-0.05598349516856449,0.0,107.0
+76,TOP5_R800_N5_COMBO,TSLA,"Tesla, Inc.  - Common Stock",space_ev_defense,False,False,-0.056556384372804726,0.0,5.0
+77,TOP5_R800_N5_COMBO,NOC,Northrop Grumman Corporation Common Stock,space_ev_defense,False,False,-0.05920288736650893,0.0,239.0
+78,TOP5_R800_N5_COMBO,NRG,"NRG Energy, Inc. Common Stock",power_generation,False,False,-0.08411996565924175,0.0,298.0
+79,TOP5_R800_N5_COMBO,ACM,AECOM Common Stock,grid_engineering,False,False,-0.09482697833070565,0.0,784.0
+80,TOP5_R800_N5_COMBO,AVAV,"AeroVironment, Inc. - Common Stock",space_ev_defense,False,False,-0.10412841314153627,0.0,510.0
+81,TOP5_R800_N5_COMBO,PRIM,Primoris Services Corporation Common Stock,grid_engineering,False,False,-0.11900835314092074,0.0,606.0
+82,TOP5_R800_N5_COMBO,CRM,"Salesforce, Inc. Common Stock",software_platform,False,False,-0.17283168987045316,0.0,41.0
+83,TOP5_R800_N5_COMBO,KTOS,"Kratos Defense & Security Solutions, Inc. - Common Stock",space_ev_defense,False,False,-0.18400388623576625,0.0,420.0
+84,TOP5_R800_N5_COMBO,ADBE,Adobe Inc. - Common Stock,software_platform,False,False,-0.19178632785308147,0.0,75.0
+85,TOP5_R800_N5_COMBO,KLAC,KLA Corporation  - Common Stock,semi_equipment,False,False,-0.6471198855782017,0.0,57.0

@@ -1,0 +1,5 @@
+﻿symbol,name,theme,role,target_weight,source_sleeve,scan_score
+SNDK,Sandisk Corporation - Common Stock When-Issued,memory_storage,top4_TOP5_R800_N5_COMBO,0.25,TOP5_R800_N5_COMBO,3.6065514989531824
+ARM,Arm Holdings plc - American Depositary Shares,ai_compute,top4_TOP5_R800_N5_COMBO,0.25,TOP5_R800_N5_COMBO,1.865391188378607
+MRVL,"Marvell Technology, Inc. - Common Stock",ai_compute,top4_TOP5_R800_N5_COMBO,0.25,TOP5_R800_N5_COMBO,1.7974691202228756
+WDC,Western Digital Corporation - Common Stock,memory_storage,top4_TOP5_R800_N5_COMBO,0.25,TOP5_R800_N5_COMBO,1.714474087202342

@@ -1,0 +1,42 @@
+services:
+  - type: web
+    name: daily-market-pool-cloud
+    env: python
+    region: singapore
+    plan: standard
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
+    autoDeploy: false
+    disk:
+      name: daily-market-pool-data
+      mountPath: /var/data
+      sizeGB: 5
+    envVars:
+      - key: DATA_DIR
+        value: /var/data/data_live
+      - key: OUTPUT_DIR
+        value: /var/data/runtime_outputs
+      - key: STATE_DIR
+        value: /var/data/state
+      - key: STATE_PATH
+        value: /var/data/state/live_state.json
+      - key: CLOUD_UPDATE_MODE
+        value: full
+      - key: CLOUD_UPDATE_CHUNK_SIZE
+        value: 25
+      - key: CLOUD_UPDATE_SLEEP_SECONDS
+        value: 1.2
+      - key: CLOUD_UPDATE_TIMEOUT
+        value: 20
+      - key: LIVE_UPDATE_PREFLIGHT
+        value: "1"
+      - key: LIVE_UPDATE_ABORT_ON_RATE_LIMIT
+        value: "1"
+      - key: LIVE_UPDATE_SKIP_CHART_ON_RATE_LIMIT
+        value: "1"
+      - key: LIVE_UPDATE_CHART_FALLBACK_MAX_SYMBOLS
+        value: "10"
+      - key: LIVE_UPDATE_MAX_RUNTIME_SECONDS
+        value: "2400"
+      - key: REBUILD_US_SCAN_FROM_RESEARCH_ON_UPDATE
+        value: "0"

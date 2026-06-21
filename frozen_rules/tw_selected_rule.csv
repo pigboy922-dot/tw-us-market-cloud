@@ -1,0 +1,2 @@
+﻿candidate_id,theme_candidate_id,lookback,trend_window,enter_spread,exit_spread,theme_trend_min,2330_reclaim,theme_weight,min_2330_weight_when_theme,core_alpha_weight,core_alpha_trend_min,quick_exit_rule,weak_rule,block_enter_when_weak,candidate_family
+TWFXOPT-002067,TWCAT10-002842,120,20,0.03,-0.03,0.05,0.08,0.8,0.1999999999999999,0.0,0.0,none,p20_p60_neg_cap0,True,2330_floor_fast_exit
