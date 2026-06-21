@@ -21,7 +21,7 @@ from tools.export_excel_record import export_excel_record
 from tools.reset_entry_baseline_to_latest_close import reset_entry_baseline_to_latest_close
 
 
-APP_VERSION = "1.0.3-entry-baseline-reset"
+APP_VERSION = "1.0.4-live-baseline-top2h46"
 
 app = FastAPI(title="Daily Market Pool Cloud", version=APP_VERSION)
 
