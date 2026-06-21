@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.env
+*.log
+runtime_outputs/*PROGRESS*.txt
+runtime_outputs/*PROGRESS*.json
+runtime_outputs/*CLOUD_UPDATE_JOB*.json
+runtime_outputs/*CLOUD_UPDATE_PROGRESS*.txt

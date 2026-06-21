@@ -110,7 +110,7 @@ TXT = {
     "included": zh(r"\u5df2\u7d0d\u5165"),
     "no_theme": zh(r"\u6c92\u6709\u4e3b\u984c\u6392\u884c"),
     "today_orders": zh(r"\u4eca\u65e5\u6b63\u5f0f\u8cb7\u55ae"),
-    "top_note": zh(r"\u6b63\u5f0f\u8cb7\u55ae\u4f7f\u7528 Top1 \u52d5\u614b\u5e02\u5834\u7248\uff1b\u6383\u63cf\u6c60\u6bcf\u65e5\u6d41\u52d5\uff0c\u9054\u6a19\u624d\u9032\u6b63\u5f0f\u6301\u5009\u3002"),
+    "top_note": "正式買單使用台股 Top2/H46 乾淨版；掃描池每日流動，達標才進正式持倉。",
     "rebalance_due": zh(r"\u4e0b\u6b21\u4ea4\u6613\u65e5\u63db\u5009"),
     "not_rebalance": zh(r"\u975e\u63db\u5009\u65e5"),
     "us_risk_on": zh(r"\u7f8e\u80a1\u98a8\u96aa\u958b"),
@@ -125,7 +125,7 @@ TXT = {
     "summary": zh(r"\u5feb\u901f\u6301\u5009\u6458\u8981"),
     "mode": zh(r"\u6a21\u5f0f"),
     "tw_target": "台股正式目標 等權",
-    "tw_target_note": "Top1 策略決定股票名單；正式下單採等權執行，不重新訓練。",
+    "tw_target_note": "Top2/H46 乾淨策略決定股票名單；正式下單採等權執行，不重新訓練。",
     "us_target": "美股正式目標 Top4 上限25%",
     "us_target_note": zh(r"\u6b63\u5f0f\u7b56\u7565\uff1a\u7f8e\u80a1 Top1 \u52d5\u614b\u5e02\u5834\u7248\uff1b\u6bcf\u65e5\u7528 Top800 \u6d41\u52d5\u5e02\u5834\u6c60\u91cd\u7b97\u3002"),
     "tw_capital": zh(r"\u53f0\u80a1\u8cc7\u91d1"),
@@ -175,11 +175,7 @@ TXT = {
 
 TXT.update(
     {
-        "top_note": zh(
-            r"\u6b63\u5f0f\u8cb7\u55ae\u4f7f\u7528\u53f0\u80a1\u540c\u578b\u7684 Top1 "
-            r"\u52d5\u614b\u5e02\u5834\u7248\uff1b\u6383\u63cf\u6c60\u6bcf\u65e5\u6d41\u52d5\uff0c"
-            r"\u9054\u6a19\u624d\u9032\u6b63\u5f0f\u6301\u5009\u3002"
-        ),
+        "top_note": "正式買單使用台股 Top2/H46 乾淨版；掃描池每日流動，達標才進正式持倉。",
         "us_target": zh(r"\u7f8e\u80a1\u6b63\u5f0f\u76ee\u6a19 Top4 \u4e0a\u965025%"),
         "us_target_note": zh(
             r"\u6b63\u5f0f\u7b56\u7565\uff1a\u7f8e\u80a1 Top1 \u52d5\u614b\u5e02\u5834\u7248\uff1b"
@@ -1398,7 +1394,7 @@ def rebalance_card(
             detail += f" 買：{buy_symbols}。"
         if sell_symbols:
             detail += f" 賣：{sell_symbols}。"
-    schedule_text = "固定 5 交易日節奏" if schedule_due is None else ("到換倉節奏" if schedule_due else "未到換倉節奏")
+    schedule_text = "固定策略交易日節奏" if schedule_due is None else ("到換倉節奏" if schedule_due else "未到換倉節奏")
     return (
         f"<article class='rebalance-card {kind}'>"
         f"<div class='rebalance-market'>{esc(market_label)}</div>"

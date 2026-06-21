@@ -193,11 +193,11 @@
   },
   "TW": {
     "market": "TW",
-    "latest_price_date": "2026-06-15",
+    "latest_price_date": "2026-06-18",
     "generated_at": "2026-06-15T17:38:05",
     "frozen_strategy": "TWFXOPT-002067",
     "source_theme": "TWCAT10-002842",
-    "outer_mode": "DEFENSE_040838",
+    "outer_mode": "VALMAX_046612",
     "theme_alloc": 0.8,
     "regime_state": 2,
     "regime_state_label": "strong",
@@ -207,63 +207,45 @@
     "notes": "Daily update uses frozen parameters only. It is a signal/pool refresh, not retraining.",
     "target_position": [
       {
+        "symbol": "2492.TW",
+        "name": "華新科",
+        "theme": "passive_component",
+        "role": "top2_h46_VALMAX_046612|equal_weight_exec",
+        "target_weight": 0.5,
+        "raw_target_weight": 0.5,
+        "source_sleeve": "VALMAX_046612",
+        "execution_group": "main",
+        "execution_overlay": "TW_EQUAL_WEIGHT"
+      },
+      {
         "symbol": "2327.TW",
         "name": "國巨*",
         "theme": "passive_component",
-        "role": "top1_DEFENSE_040838|equal_weight_exec",
-        "target_weight": 0.3333333333333333,
-        "raw_target_weight": 0.35,
-        "source_sleeve": "DEFENSE_040838",
-        "execution_group": "main",
-        "execution_overlay": "TW_EQUAL_WEIGHT"
-      },
-      {
-        "symbol": "2454.TW",
-        "name": "聯發科",
-        "theme": "ic_design_mobile",
-        "role": "top1_DEFENSE_040838|equal_weight_exec",
-        "target_weight": 0.3333333333333333,
-        "raw_target_weight": 0.35,
-        "source_sleeve": "DEFENSE_040838",
-        "execution_group": "main",
-        "execution_overlay": "TW_EQUAL_WEIGHT"
-      },
-      {
-        "symbol": "3189.TW",
-        "name": "景碩",
-        "theme": "substrate",
-        "role": "top1_DEFENSE_040838|equal_weight_exec",
-        "target_weight": 0.3333333333333333,
-        "raw_target_weight": 0.3,
-        "source_sleeve": "DEFENSE_040838",
+        "role": "top2_h46_VALMAX_046612|equal_weight_exec",
+        "target_weight": 0.5,
+        "raw_target_weight": 0.5,
+        "source_sleeve": "VALMAX_046612",
         "execution_group": "main",
         "execution_overlay": "TW_EQUAL_WEIGHT"
       }
     ],
     "raw_target_position": [
       {
+        "symbol": "2492.TW",
+        "name": "華新科",
+        "theme": "passive_component",
+        "role": "top2_h46_VALMAX_046612",
+        "target_weight": 0.5
+      },
+      {
         "symbol": "2327.TW",
         "name": "國巨*",
         "theme": "passive_component",
-        "role": "top1_DEFENSE_040838",
-        "target_weight": 0.35
-      },
-      {
-        "symbol": "2454.TW",
-        "name": "聯發科",
-        "theme": "ic_design_mobile",
-        "role": "top1_DEFENSE_040838",
-        "target_weight": 0.35
-      },
-      {
-        "symbol": "3189.TW",
-        "name": "景碩",
-        "theme": "substrate",
-        "role": "top1_DEFENSE_040838",
-        "target_weight": 0.3
+        "role": "top2_h46_VALMAX_046612",
+        "target_weight": 0.5
       }
     ],
-    "top1_switch_rule": "TWSWENS-002469",
+    "top1_switch_rule": "TW_TOP2_HOLD46_CLEAN",
     "execution_overlay": "TW_EQUAL_WEIGHT"
   },
   "US": {
@@ -501,5 +483,5 @@
     },
     "dynamic_market_execution_top_n": 4
   },
-  "updated_at": "2026-06-20T07:26:26"
+  "updated_at": "2026-06-21T22:54:59"
 }

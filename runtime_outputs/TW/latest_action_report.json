@@ -1,110 +1,96 @@
 {
   "market_state": {
     "market": "TW",
-    "latest_price_date": "2026-06-15",
-    "generated_at": "2026-06-20T07:26:21",
-    "frozen_strategy": "TWSWENS-002469_TOP1_STRATEGY_SWITCH",
+    "latest_price_date": "2026-06-18",
+    "generated_at": "2026-06-21T22:54:52",
+    "frozen_strategy": "TW_TOP2_HOLD46_CLEAN",
     "execution_overlay": "TW_EQUAL_WEIGHT",
-    "strategy_mode": "top1_strategy_switch",
-    "outer_mode": "DEFENSE_040838",
+    "strategy_mode": "top2_h46_strategy_switch",
+    "outer_mode": "VALMAX_046612",
     "theme_alloc": 1.0,
     "regime_state": 2,
-    "regime_state_label": "top1_switch",
-    "selected_component": "DEFENSE_040838",
-    "component_signal_date": "2026-06-11",
-    "component_rebalance_date": "2026-06-12",
-    "component_top_score": 1.0367629040971562,
-    "rebalance_step_trading_days": 5,
-    "trading_days_since_rebalance": 1,
-    "trading_days_since_signal": 2,
-    "rebalance_days_remaining": 4,
+    "regime_state_label": "top2_h46_switch",
+    "selected_component": "VALMAX_046612",
+    "component_signal_date": "2026-06-18",
+    "component_rebalance_date": "2026-06-18",
+    "component_top_score": 0.5977795397936401,
+    "rebalance_step_trading_days": 46,
+    "trading_days_since_rebalance": 0,
+    "trading_days_since_signal": 0,
+    "rebalance_days_remaining": 46,
     "rebalance_due_today_by_counter": false,
     "rebalance_due_next_session_by_counter": false,
-    "rebalance_count_basis": "execution_date_not_signal_date",
-    "action_signal": "hold_top1_target",
-    "notes": "TW production target uses clean Top1 strategy switch, then applies execution overlay: equal weight across selected stocks. No retraining in cloud package."
+    "rebalance_count_basis": "live_go_live_cycle",
+    "action_signal": "hold_live_cycle_target",
+    "notes": "TW production target uses clean Top2/H46 strategy switch, then applies execution overlay: equal weight across selected stocks. Manual go-live baseline recomputes the initial live target from that baseline close and then holds it until the next live cycle. No retraining in cloud package. Live cycle starts from 2026-06-18 because formal deployment was reset manually.",
+    "research_component_rebalance_date": "2026-06-18",
+    "live_cycle_rebalance_date": "2026-06-18",
+    "live_cycle_source_signal_date": "2026-06-18",
+    "live_cycle_baseline_type": "manual_go_live_close"
   },
   "target_position": [
+    {
+      "symbol": "2492.TW",
+      "name": "華新科",
+      "theme": "passive_component",
+      "role": "top2_h46_VALMAX_046612|equal_weight_exec",
+      "target_weight": 0.5,
+      "raw_target_weight": 0.5,
+      "source_sleeve": "VALMAX_046612",
+      "execution_group": "main",
+      "execution_overlay": "TW_EQUAL_WEIGHT"
+    },
     {
       "symbol": "2327.TW",
       "name": "國巨*",
       "theme": "passive_component",
-      "role": "top1_DEFENSE_040838|equal_weight_exec",
-      "target_weight": 0.3333333333333333,
-      "raw_target_weight": 0.35,
-      "source_sleeve": "DEFENSE_040838",
-      "execution_group": "main",
-      "execution_overlay": "TW_EQUAL_WEIGHT"
-    },
-    {
-      "symbol": "2454.TW",
-      "name": "聯發科",
-      "theme": "ic_design_mobile",
-      "role": "top1_DEFENSE_040838|equal_weight_exec",
-      "target_weight": 0.3333333333333333,
-      "raw_target_weight": 0.35,
-      "source_sleeve": "DEFENSE_040838",
-      "execution_group": "main",
-      "execution_overlay": "TW_EQUAL_WEIGHT"
-    },
-    {
-      "symbol": "3189.TW",
-      "name": "景碩",
-      "theme": "substrate",
-      "role": "top1_DEFENSE_040838|equal_weight_exec",
-      "target_weight": 0.3333333333333333,
-      "raw_target_weight": 0.3,
-      "source_sleeve": "DEFENSE_040838",
+      "role": "top2_h46_VALMAX_046612|equal_weight_exec",
+      "target_weight": 0.5,
+      "raw_target_weight": 0.5,
+      "source_sleeve": "VALMAX_046612",
       "execution_group": "main",
       "execution_overlay": "TW_EQUAL_WEIGHT"
     }
   ],
   "raw_target_position": [
     {
+      "symbol": "2492.TW",
+      "name": "華新科",
+      "theme": "passive_component",
+      "role": "top2_h46_VALMAX_046612",
+      "target_weight": 0.5
+    },
+    {
       "symbol": "2327.TW",
       "name": "國巨*",
       "theme": "passive_component",
-      "role": "top1_DEFENSE_040838",
-      "target_weight": 0.35
-    },
-    {
-      "symbol": "2454.TW",
-      "name": "聯發科",
-      "theme": "ic_design_mobile",
-      "role": "top1_DEFENSE_040838",
-      "target_weight": 0.35
-    },
-    {
-      "symbol": "3189.TW",
-      "name": "景碩",
-      "theme": "substrate",
-      "role": "top1_DEFENSE_040838",
-      "target_weight": 0.3
+      "role": "top2_h46_VALMAX_046612",
+      "target_weight": 0.5
     }
   ],
   "component_scores": [
     {
       "rank": 1,
-      "theme": "DEFENSE_040838",
-      "theme_score": 1.0768137893239091,
+      "theme": "VALMAX_046612",
+      "theme_score": 0.5977795397936401,
       "selected": true
     },
     {
       "rank": 2,
-      "theme": "TOP5_041880",
-      "theme_score": 1.000844075246201,
+      "theme": "DEFENSE_040838",
+      "theme_score": 0.5635081782806366,
       "selected": false
     },
     {
       "rank": 3,
-      "theme": "VALMAX_046612",
-      "theme_score": 0.5304863876179172,
+      "theme": "TOP5_041880",
+      "theme_score": 0.5245553425985912,
       "selected": false
     },
     {
       "rank": 4,
       "theme": "BALANCED_058008",
-      "theme_score": 0.2967142535527071,
+      "theme_score": 0.28759971284378966,
       "selected": false
     }
   ],
@@ -115,59 +101,39 @@
       "symbol": "2327.TW",
       "name": "國巨*",
       "theme": "passive_component",
-      "selected_today": true,
-      "component_weight": 0.35,
-      "final_target_weight": 0.3333333333333333
+      "selected_today": false,
+      "component_weight": 0.5,
+      "final_target_weight": 0.0
     },
     {
       "rank": 2,
       "component": "DEFENSE_040838",
-      "symbol": "2454.TW",
-      "name": "聯發科",
-      "theme": "ic_design_mobile",
-      "selected_today": true,
-      "component_weight": 0.35,
-      "final_target_weight": 0.3333333333333333
-    },
-    {
-      "rank": 3,
-      "component": "DEFENSE_040838",
-      "symbol": "3189.TW",
-      "name": "景碩",
-      "theme": "substrate",
-      "selected_today": true,
-      "component_weight": 0.3,
-      "final_target_weight": 0.3333333333333333
+      "symbol": "2344.TW",
+      "name": "華邦電",
+      "theme": "dram_nand",
+      "selected_today": false,
+      "component_weight": 0.5,
+      "final_target_weight": 0.0
     },
     {
       "rank": 1,
       "component": "VALMAX_046612",
-      "symbol": "2327.TW",
-      "name": "國巨*",
+      "symbol": "2492.TW",
+      "name": "華新科",
       "theme": "passive_component",
-      "selected_today": false,
-      "component_weight": 0.35,
-      "final_target_weight": 0.0
+      "selected_today": true,
+      "component_weight": 0.5,
+      "final_target_weight": 0.5
     },
     {
       "rank": 2,
       "component": "VALMAX_046612",
-      "symbol": "2492.TW",
-      "name": "華新科",
+      "symbol": "2327.TW",
+      "name": "國巨*",
       "theme": "passive_component",
-      "selected_today": false,
-      "component_weight": 0.35,
-      "final_target_weight": 0.0
-    },
-    {
-      "rank": 3,
-      "component": "VALMAX_046612",
-      "symbol": "2472.TW",
-      "name": "立隆電",
-      "theme": "passive_component",
-      "selected_today": false,
-      "component_weight": 0.3,
-      "final_target_weight": 0.0
+      "selected_today": true,
+      "component_weight": 0.5,
+      "final_target_weight": 0.5
     },
     {
       "rank": 1,
@@ -176,7 +142,7 @@
       "name": "華新科",
       "theme": "passive_component",
       "selected_today": false,
-      "component_weight": 0.3,
+      "component_weight": 0.5,
       "final_target_weight": 0.0
     },
     {
@@ -186,37 +152,7 @@
       "name": "國巨*",
       "theme": "passive_component",
       "selected_today": false,
-      "component_weight": 0.272727,
-      "final_target_weight": 0.0
-    },
-    {
-      "rank": 3,
-      "component": "TOP5_041880",
-      "symbol": "2472.TW",
-      "name": "立隆電",
-      "theme": "passive_component",
-      "selected_today": false,
-      "component_weight": 0.181818,
-      "final_target_weight": 0.0
-    },
-    {
-      "rank": 4,
-      "component": "TOP5_041880",
-      "symbol": "3189.TW",
-      "name": "景碩",
-      "theme": "substrate",
-      "selected_today": false,
-      "component_weight": 0.136364,
-      "final_target_weight": 0.0
-    },
-    {
-      "rank": 5,
-      "component": "TOP5_041880",
-      "symbol": "2454.TW",
-      "name": "聯發科",
-      "theme": "ic_design_mobile",
-      "selected_today": false,
-      "component_weight": 0.109091,
+      "component_weight": 0.5,
       "final_target_weight": 0.0
     },
     {
@@ -226,27 +162,17 @@
       "name": "華新科",
       "theme": "passive_component",
       "selected_today": false,
-      "component_weight": 0.35,
+      "component_weight": 0.5,
       "final_target_weight": 0.0
     },
     {
       "rank": 2,
       "component": "BALANCED_058008",
-      "symbol": "3189.TW",
-      "name": "景碩",
-      "theme": "substrate",
-      "selected_today": false,
-      "component_weight": 0.35,
-      "final_target_weight": 0.0
-    },
-    {
-      "rank": 3,
-      "component": "BALANCED_058008",
-      "symbol": "2472.TW",
-      "name": "立隆電",
+      "symbol": "2327.TW",
+      "name": "國巨*",
       "theme": "passive_component",
       "selected_today": false,
-      "component_weight": 0.3,
+      "component_weight": 0.5,
       "final_target_weight": 0.0
     }
   ]

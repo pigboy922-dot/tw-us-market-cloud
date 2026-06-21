@@ -17,6 +17,8 @@ DATA_DIR = Path(os.getenv("DATA_DIR", BASE_DIR / "data_live"))
 RULE_DIR = Path(os.getenv("RULE_DIR", BASE_DIR / "frozen_rules"))
 OUTPUT_DIR = Path(os.getenv("OUTPUT_DIR", BASE_DIR / "runtime_outputs"))
 STATE_PATH = Path(os.getenv("STATE_PATH", BASE_DIR / "state" / "live_state.json"))
+STATE_DIR = STATE_PATH.parent
+LIVE_CYCLE_BASELINE_PATH = Path(os.getenv("LIVE_CYCLE_BASELINE_PATH", STATE_DIR / "live_cycle_baseline.csv"))
 
 US_OUT = OUTPUT_DIR / "US"
 US_SCAN_OUT = OUTPUT_DIR / "US_SCAN"
@@ -189,6 +191,72 @@ def rebalance_counter_fields(
         "rebalance_due_next_session_by_counter": bool((latest_step_int + 1) % step == 0),
         "rebalance_count_basis": "latest_backtest_step_counter",
     }
+
+
+def live_cycle_baseline(market: str) -> dict[str, Any] | None:
+    if not LIVE_CYCLE_BASELINE_PATH.exists():
+        return None
+    try:
+        df = pd.read_csv(LIVE_CYCLE_BASELINE_PATH, dtype=str, low_memory=False)
+    except Exception:
+        return None
+    if df.empty or "market" not in df.columns:
+        return None
+    df["market"] = df["market"].fillna("").astype(str).str.upper().str.strip()
+    part = df[df["market"] == market.upper()].copy()
+    if part.empty:
+        return None
+    if "created_at" in part.columns:
+        part = part.sort_values("created_at")
+    return part.tail(1).iloc[0].where(pd.notna(part.tail(1).iloc[0]), "").to_dict()
+
+
+def apply_live_cycle_baseline(market_state: dict[str, Any], market: str, dates: pd.DatetimeIndex) -> dict[str, Any]:
+    rec = live_cycle_baseline(market)
+    if not rec:
+        return market_state
+    start_text = str(rec.get("cycle_rebalance_date") or rec.get("baseline_date") or "").strip()
+    if not start_text:
+        return market_state
+    try:
+        start = pd.Timestamp(start_text).normalize()
+        latest = pd.Timestamp(market_state.get("latest_price_date")).normalize()
+    except Exception:
+        return market_state
+    if pd.isna(start) or pd.isna(latest) or start > latest:
+        return market_state
+
+    date_index = pd.DatetimeIndex(pd.to_datetime(dates)).normalize()
+    if date_index.empty:
+        return market_state
+    days_since = int(((date_index > start) & (date_index <= latest)).sum())
+    step = int(market_state.get("rebalance_step_trading_days") or rec.get("rebalance_step_trading_days") or 1)
+    step = max(1, step)
+    due_today = days_since >= step
+    due_next = (not due_today) and (days_since + 1 >= step)
+
+    market_state.setdefault("research_component_rebalance_date", market_state.get("component_rebalance_date", ""))
+    market_state["component_rebalance_date"] = start.strftime("%Y-%m-%d")
+    market_state["live_cycle_rebalance_date"] = start.strftime("%Y-%m-%d")
+    market_state["live_cycle_source_signal_date"] = str(rec.get("source_signal_date") or "")
+    market_state["live_cycle_baseline_type"] = str(rec.get("baseline_type") or "manual_go_live_close")
+    market_state["trading_days_since_rebalance"] = days_since
+    market_state["rebalance_days_remaining"] = max(0, step - days_since)
+    market_state["rebalance_due_today_by_counter"] = due_today
+    market_state["rebalance_due_next_session_by_counter"] = due_next
+    market_state["rebalance_count_basis"] = "live_go_live_cycle"
+    if "action_signal" in market_state:
+        if due_today:
+            market_state["action_signal"] = "rebalance_live_cycle_target"
+        elif due_next:
+            market_state["action_signal"] = "next_session_live_cycle_rebalance_pending"
+        else:
+            market_state["action_signal"] = "hold_live_cycle_target"
+    notes = str(market_state.get("notes") or "")
+    live_note = f" Live cycle starts from {start.strftime('%Y-%m-%d')} because formal deployment was reset manually."
+    if live_note.strip() not in notes:
+        market_state["notes"] = (notes + live_note).strip()
+    return market_state
 
 
 def load_us_prices(symbols: list[str]) -> pd.DataFrame:
@@ -396,6 +464,7 @@ def run_us_v30_daily(state: dict[str, Any]) -> dict[str, Any]:
         "uses_2025_2026_for_tuning": False,
         "notes": "Cloud package uses compact tail data and frozen V30 parameters. It does not retrain.",
     }
+    market_state = apply_live_cycle_baseline(market_state, "US", dates)
 
     pd.DataFrame([market_state]).to_csv(US_OUT / "latest_market_state.csv", index=False, encoding="utf-8-sig")
     pd.DataFrame(theme_rows).to_csv(US_OUT / "latest_theme_rank.csv", index=False, encoding="utf-8-sig")
@@ -2102,6 +2171,7 @@ def run_us_dynamic_market_daily(state: dict[str, Any], spec: dict[str, Any]) -> 
         "uses_2025_2026_for_tuning": False,
         "notes": f"US production target uses the clean dynamic-market switch with Top{execution_top_n} execution and {int(execution_cap * 100)}% single-stock cap. Rules are frozen; no cloud retraining.",
     }
+    market_state = apply_live_cycle_baseline(market_state, "US", close.index)
     pd.DataFrame([market_state]).to_csv(US_OUT / "latest_market_state.csv", index=False, encoding="utf-8-sig")
     pd.DataFrame(theme_rows).to_csv(US_OUT / "latest_theme_rank.csv", index=False, encoding="utf-8-sig")
     pd.DataFrame(latest_pack["candidate_rows"]).to_csv(US_OUT / "latest_candidate_pool.csv", index=False, encoding="utf-8-sig")
@@ -2291,6 +2361,7 @@ def run_us_combo_daily(state: dict[str, Any], spec: dict[str, Any]) -> dict[str,
             "It does not retrain in the cloud package."
         ),
     }
+    market_state = apply_live_cycle_baseline(market_state, "US", dates)
 
     pd.DataFrame([market_state]).to_csv(US_OUT / "latest_market_state.csv", index=False, encoding="utf-8-sig")
     pd.DataFrame(theme_rows).to_csv(US_OUT / "latest_theme_rank.csv", index=False, encoding="utf-8-sig")
@@ -2839,8 +2910,8 @@ TW_TOP1_COMPONENT_RULES = {
         "candidate_id": "TWAGGCLEAN-040838",
         "pool": "all_tech",
         "score": "ultra20",
-        "n": 3,
-        "rebalance_n": 10,
+        "n": 2,
+        "rebalance_n": 46,
         "min_ret20": -0.02,
         "min_ret60": 0.05,
         "min_ret120": 0.0,
@@ -2853,8 +2924,8 @@ TW_TOP1_COMPONENT_RULES = {
         "candidate_id": "TWAGGCLEAN-046612",
         "pool": "all_tech",
         "score": "accel60",
-        "n": 3,
-        "rebalance_n": 10,
+        "n": 2,
+        "rebalance_n": 46,
         "min_ret20": -0.02,
         "min_ret60": 0.05,
         "min_ret120": 0.05,
@@ -2867,8 +2938,8 @@ TW_TOP1_COMPONENT_RULES = {
         "candidate_id": "TWAGGCLEAN-041880",
         "pool": "all_tech",
         "score": "ultra20",
-        "n": 5,
-        "rebalance_n": 10,
+        "n": 2,
+        "rebalance_n": 46,
         "min_ret20": -0.10,
         "min_ret60": 0.0,
         "min_ret120": 0.05,
@@ -2881,8 +2952,8 @@ TW_TOP1_COMPONENT_RULES = {
         "candidate_id": "TWAGGCLEAN-058008",
         "pool": "all_tech",
         "score": "combo",
-        "n": 3,
-        "rebalance_n": 10,
+        "n": 2,
+        "rebalance_n": 46,
         "min_ret20": -0.10,
         "min_ret60": 0.0,
         "min_ret120": 0.05,
@@ -2892,6 +2963,10 @@ TW_TOP1_COMPONENT_RULES = {
         "market_cap_rank_max": 250,
     },
 }
+
+TW_PRODUCTION_STRATEGY_ID = "TW_TOP2_HOLD46_CLEAN"
+TW_PRODUCTION_REBALANCE_STEP = 46
+TW_PRODUCTION_EXECUTION_TOP_N = 2
 
 
 def cap_weights_np(w: np.ndarray, cap: float) -> np.ndarray:
@@ -3014,7 +3089,7 @@ def tw_select_top1_component(component_equity: pd.DataFrame) -> tuple[pd.DataFra
     selected_rows: list[dict[str, Any]] = []
     mode = "DEFENSE_040838"
     for j, date in enumerate(dates):
-        if j == 0 or j % 5 == 0:
+        if j == 0 or j % TW_PRODUCTION_REBALANCE_STEP == 0:
             sig_i = max(0, j - 1)
             sig_date = dates[sig_i]
             row = scores.iloc[sig_i].copy()
@@ -3032,8 +3107,8 @@ def tw_select_top1_component(component_equity: pd.DataFrame) -> tuple[pd.DataFra
                 {
                     "date": date.strftime("%Y-%m-%d"),
                     "signal_date": sig_date.strftime("%Y-%m-%d"),
-                    "score_preset": "balanced",
-                    "mode": "top1",
+                    "score_preset": TW_PRODUCTION_STRATEGY_ID,
+                    "mode": "top2_h46",
                     "selected": mode,
                     "top_score": top_score,
                     "fallback": "defense",
@@ -3080,6 +3155,92 @@ def apply_tw_equal_weight_execution_overlay(target_rows: list[dict[str, Any]], s
     return out
 
 
+def tw_component_stock_weights_at(
+    component: str,
+    rule: dict[str, Any],
+    close: pd.DataFrame,
+    symbol_map: pd.DataFrame,
+    features: dict[str, pd.DataFrame],
+    signal_i: int,
+) -> dict[str, float]:
+    symbols = list(close.columns)
+    mp = symbol_map.drop_duplicates("symbol").set_index("symbol").reindex(symbols)
+    strategy_group = mp["strategy_group"].fillna("").astype(str)
+    liquidity = pd.to_numeric(mp["liquidity_rank"], errors="coerce").fillna(9999.0)
+    cap_rank = pd.to_numeric(mp["true_market_cap_rank"], errors="coerce").fillna(9999.0)
+    pool_groups = TW_TOP1_POOL_GROUPS[str(rule["pool"])]
+    pool_mask = (
+        strategy_group.isin(pool_groups)
+        & liquidity.le(float(rule["liquidity_rank_max"]))
+        & cap_rank.le(float(rule["market_cap_rank_max"]))
+    )
+    pool_symbols = list(pool_mask[pool_mask].index)
+    sig = features[str(rule["score"])].iloc[signal_i].reindex(pool_symbols)
+    ok = (
+        sig.replace([np.inf, -np.inf], np.nan).notna()
+        & close.iloc[signal_i].reindex(pool_symbols).gt(0).fillna(False)
+        & features["r20"].iloc[signal_i].reindex(pool_symbols).ge(float(rule["min_ret20"])).fillna(False)
+        & features["r60"].iloc[signal_i].reindex(pool_symbols).ge(float(rule["min_ret60"])).fillna(False)
+        & features["r120"].iloc[signal_i].reindex(pool_symbols).ge(float(rule["min_ret120"])).fillna(False)
+        & features["high120_dd"].iloc[signal_i].reindex(pool_symbols).ge(float(rule["min_high120_dd"])).fillna(False)
+        & features["amount_ratio"].iloc[signal_i].reindex(pool_symbols).ge(float(rule["min_amount_ratio"])).fillna(False)
+    )
+    chosen = sig[ok].sort_values(ascending=False).head(int(rule["n"])).index.tolist()
+    if not chosen:
+        return {}
+    sleeve = 1.0 / np.arange(1, len(chosen) + 1, dtype=float)
+    sleeve = cap_weights_np(sleeve, 0.30)
+    return {str(sym): float(weight) for sym, weight in zip(chosen, sleeve)}
+
+
+def tw_live_go_live_selection(
+    close: pd.DataFrame,
+    symbol_map: pd.DataFrame,
+    features: dict[str, pd.DataFrame],
+    component_eq: pd.DataFrame,
+) -> dict[str, Any] | None:
+    rec = live_cycle_baseline("TW")
+    if not rec or str(rec.get("baseline_type", "")) != "manual_go_live_close":
+        return None
+    cycle_date = str(rec.get("cycle_rebalance_date") or rec.get("baseline_date") or "").strip()
+    if not cycle_date:
+        return None
+    try:
+        ts = pd.Timestamp(cycle_date).normalize()
+    except Exception:
+        return None
+    date_index = pd.DatetimeIndex(pd.to_datetime(close.index)).normalize()
+    locs = np.where(date_index <= ts)[0]
+    if len(locs) == 0:
+        return None
+    signal_i = int(locs[-1])
+    signal_date = pd.Timestamp(close.index[signal_i]).strftime("%Y-%m-%d")
+    scores = tw_top1_switch_score(component_eq).iloc[signal_i].replace([np.inf, -np.inf], np.nan).dropna()
+    selected = "DEFENSE_040838"
+    top_score = float("nan")
+    if len(scores):
+        ranked = scores.sort_values(ascending=False)
+        top_score = float(ranked.iloc[0])
+        selected = str(ranked.index[0]) if top_score >= 0.10 else "DEFENSE_040838"
+    weights = tw_component_stock_weights_at(
+        selected,
+        TW_TOP1_COMPONENT_RULES[selected],
+        close,
+        symbol_map,
+        features,
+        signal_i,
+    )
+    return {
+        "selected_component": selected,
+        "signal_date": signal_date,
+        "rebalance_date": signal_date,
+        "top_score": top_score,
+        "stock_weights": weights,
+        "signal_i": signal_i,
+        "cycle_date": cycle_date,
+    }
+
+
 def run_tw_top1_daily(state: dict[str, Any]) -> dict[str, Any]:
     TW_OUT.mkdir(parents=True, exist_ok=True)
     prices, _index_prices, symbol_map = load_tw_data()
@@ -3108,7 +3269,17 @@ def run_tw_top1_daily(state: dict[str, Any]) -> dict[str, Any]:
     latest_component = str(latest_mode_series.iloc[0])
     latest_date = close.index[-1]
     latest_mode_row = switch_modes.tail(1).iloc[0].to_dict()
-    rebalance_step = 5
+    live_selection = tw_live_go_live_selection(close, symbol_map, features, component_eq)
+    if live_selection:
+        latest_component = str(live_selection["selected_component"])
+        latest_mode_row = {
+            "date": live_selection["rebalance_date"],
+            "signal_date": live_selection["signal_date"],
+            "selected": latest_component,
+            "top_score": live_selection["top_score"],
+            "component_weights": f"{latest_component}:1.000000",
+        }
+    rebalance_step = TW_PRODUCTION_REBALANCE_STEP
     latest_rebalance_date = pd.Timestamp(latest_mode_row.get("date", latest_date))
     latest_signal_date = pd.Timestamp(latest_mode_row.get("signal_date", latest_date))
     latest_idx = len(close.index) - 1
@@ -3126,19 +3297,25 @@ def run_tw_top1_daily(state: dict[str, Any]) -> dict[str, Any]:
     rebalance_due_next_session = (not rebalance_due_today) and (trading_days_since_rebalance + 1 >= rebalance_step)
     rebalance_days_remaining = max(0, rebalance_step - trading_days_since_rebalance)
     if rebalance_due_today:
-        action_signal = "rebalance_top1_target"
+        action_signal = "rebalance_top2_h46_target"
     elif rebalance_due_next_session:
         action_signal = "next_session_rebalance_pending"
     else:
-        action_signal = "hold_top1_target"
+        action_signal = "hold_top2_h46_target"
 
     mp2 = symbol_map.drop_duplicates("symbol").set_index("symbol")
-    latest_pos = component_positions[latest_component].tail(1)
     stock_weights: dict[str, float] = {}
-    if not latest_pos.empty:
-        syms = [s for s in str(latest_pos.iloc[0]["symbols"]).split("|") if s]
-        ws = [float(x) for x in str(latest_pos.iloc[0]["weights"]).split("|") if x]
-        stock_weights = {sym: weight for sym, weight in zip(syms, ws)}
+    if live_selection:
+        stock_weights = {
+            str(sym): float(weight)
+            for sym, weight in dict(live_selection.get("stock_weights", {})).items()
+        }
+    else:
+        latest_pos = component_positions[latest_component].tail(1)
+        if not latest_pos.empty:
+            syms = [s for s in str(latest_pos.iloc[0]["symbols"]).split("|") if s]
+            ws = [float(x) for x in str(latest_pos.iloc[0]["weights"]).split("|") if x]
+            stock_weights = {sym: weight for sym, weight in zip(syms, ws)}
     target_rows: list[dict[str, Any]] = []
     for sym, weight in sorted(stock_weights.items(), key=lambda kv: kv[1], reverse=True):
         meta = mp2.loc[sym] if sym in mp2.index else {}
@@ -3147,7 +3324,7 @@ def run_tw_top1_daily(state: dict[str, Any]) -> dict[str, Any]:
                 "symbol": sym,
                 "name": meta.get("name", "") if hasattr(meta, "get") else "",
                 "theme": meta.get("strategy_group", "") if hasattr(meta, "get") else "",
-                "role": f"top1_{latest_component}",
+                "role": f"top2_h46_{latest_component}",
                 "target_weight": float(weight),
             }
         )
@@ -3162,7 +3339,8 @@ def run_tw_top1_daily(state: dict[str, Any]) -> dict[str, Any]:
         if str(row.get("symbol", "")) != "CASH"
     }
 
-    latest_scores = tw_top1_switch_score(component_eq).iloc[-2 if len(component_eq) >= 2 else -1].sort_values(ascending=False)
+    score_i = int(live_selection["signal_i"]) if live_selection else (-2 if len(component_eq) >= 2 else -1)
+    latest_scores = tw_top1_switch_score(component_eq).iloc[score_i].sort_values(ascending=False)
     theme_rank_rows = [
         {
             "rank": i,
@@ -3175,11 +3353,23 @@ def run_tw_top1_daily(state: dict[str, Any]) -> dict[str, Any]:
     ]
     candidate_rows: list[dict[str, Any]] = []
     for component, pos in component_positions.items():
-        if pos.empty:
-            continue
-        row = pos.tail(1).iloc[0]
-        syms = [s for s in str(row["symbols"]).split("|") if s]
-        ws = [float(x) for x in str(row["weights"]).split("|") if x]
+        if live_selection:
+            comp_weights = tw_component_stock_weights_at(
+                component,
+                TW_TOP1_COMPONENT_RULES[component],
+                close,
+                symbol_map,
+                features,
+                int(live_selection["signal_i"]),
+            )
+            syms = list(comp_weights.keys())
+            ws = list(comp_weights.values())
+        else:
+            if pos.empty:
+                continue
+            row = pos.tail(1).iloc[0]
+            syms = [s for s in str(row["symbols"]).split("|") if s]
+            ws = [float(x) for x in str(row["weights"]).split("|") if x]
         for rank, (sym, weight) in enumerate(zip(syms, ws), 1):
             meta = mp2.loc[sym] if sym in mp2.index else {}
             candidate_rows.append(
@@ -3202,7 +3392,7 @@ def run_tw_top1_daily(state: dict[str, Any]) -> dict[str, Any]:
             "outer_mode": latest_component,
             "target_position": target_rows,
             "raw_target_position": raw_target_rows,
-            "top1_switch_rule": "TWSWENS-002469",
+            "top1_switch_rule": TW_PRODUCTION_STRATEGY_ID,
             "execution_overlay": "TW_EQUAL_WEIGHT",
         }
     )
@@ -3210,13 +3400,13 @@ def run_tw_top1_daily(state: dict[str, Any]) -> dict[str, Any]:
         "market": "TW",
         "latest_price_date": latest_date,
         "generated_at": datetime.now().isoformat(timespec="seconds"),
-        "frozen_strategy": "TWSWENS-002469_TOP1_STRATEGY_SWITCH",
+        "frozen_strategy": TW_PRODUCTION_STRATEGY_ID,
         "execution_overlay": "TW_EQUAL_WEIGHT",
-        "strategy_mode": "top1_strategy_switch",
+        "strategy_mode": "top2_h46_strategy_switch",
         "outer_mode": latest_component,
         "theme_alloc": 1.0,
         "regime_state": 2,
-        "regime_state_label": "top1_switch",
+        "regime_state_label": "top2_h46_switch",
         "selected_component": latest_component,
         "component_signal_date": latest_mode_row.get("signal_date"),
         "component_rebalance_date": latest_rebalance_date.strftime("%Y-%m-%d"),
@@ -3229,13 +3419,19 @@ def run_tw_top1_daily(state: dict[str, Any]) -> dict[str, Any]:
         "rebalance_due_next_session_by_counter": rebalance_due_next_session,
         "rebalance_count_basis": "execution_date_not_signal_date",
         "action_signal": action_signal,
-        "notes": "TW production target uses clean Top1 strategy switch, then applies execution overlay: equal weight across selected stocks. No retraining in cloud package.",
+        "notes": (
+            "TW production target uses clean Top2/H46 strategy switch, then applies execution overlay: equal weight across selected stocks. "
+            "Manual go-live baseline recomputes the initial live target from that baseline close and then holds it until the next live cycle. "
+            "No retraining in cloud package."
+        ),
     }
+    market_state = apply_live_cycle_baseline(market_state, "TW", close.index)
     pd.DataFrame([market_state]).to_csv(TW_OUT / "latest_market_state.csv", index=False, encoding="utf-8-sig")
     pd.DataFrame(theme_rank_rows).to_csv(TW_OUT / "latest_theme_rank.csv", index=False, encoding="utf-8-sig")
     pd.DataFrame(candidate_rows).to_csv(TW_OUT / "latest_candidate_pool.csv", index=False, encoding="utf-8-sig")
     pd.DataFrame(target_rows).to_csv(TW_OUT / "latest_target_position.csv", index=False, encoding="utf-8-sig")
     switch_modes.to_csv(TW_OUT / "latest_top1_switch_modes.csv", index=False, encoding="utf-8-sig")
+    switch_modes.to_csv(TW_OUT / "latest_top2_h46_switch_modes.csv", index=False, encoding="utf-8-sig")
     action_report = {
         "market_state": market_state,
         "target_position": target_rows,

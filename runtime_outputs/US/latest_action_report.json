@@ -2,7 +2,7 @@
   "market_state": {
     "market": "US",
     "latest_price_date": "2026-06-18",
-    "generated_at": "2026-06-20T07:26:24",
+    "generated_at": "2026-06-21T22:54:57",
     "frozen_strategy": "US_DYNAMIC_MARKET_TOP4_CLEAN",
     "strategy_mode": "top1_dynamic_market_like_tw",
     "execution_overlay": "US_DYNAMIC_MARKET_TOP4_CAP25",
@@ -10,19 +10,23 @@
     "regime": "risk_on",
     "selected_component": "TOP5_R800_N5_COMBO",
     "component_signal_date": "2026-06-16",
-    "component_rebalance_date": "2026-06-10",
+    "component_rebalance_date": "2026-06-18",
     "component_top_score": 0.7553501447582477,
     "gross_cap": 1.0,
     "scan_universe_symbols": 812,
     "dynamic_market_pool": "rolling Top800 by 60D median dollar volume",
     "rebalance_step_trading_days": 10,
-    "trading_days_since_rebalance": 6,
-    "rebalance_days_remaining": 4,
+    "trading_days_since_rebalance": 0,
+    "rebalance_days_remaining": 10,
     "rebalance_due_today_by_counter": false,
     "rebalance_due_next_session_by_counter": false,
-    "rebalance_count_basis": "latest_backtest_step_counter",
+    "rebalance_count_basis": "live_go_live_cycle",
     "uses_2025_2026_for_tuning": false,
-    "notes": "US production target uses the clean dynamic-market switch with Top4 execution and 25% single-stock cap. Rules are frozen; no cloud retraining."
+    "notes": "US production target uses the clean dynamic-market switch with Top4 execution and 25% single-stock cap. Rules are frozen; no cloud retraining. Live cycle starts from 2026-06-18 because formal deployment was reset manually.",
+    "research_component_rebalance_date": "2026-06-10",
+    "live_cycle_rebalance_date": "2026-06-18",
+    "live_cycle_source_signal_date": "2026-06-18",
+    "live_cycle_baseline_type": "manual_go_live_close"
   },
   "target_position_if_rebalanced": [
     {

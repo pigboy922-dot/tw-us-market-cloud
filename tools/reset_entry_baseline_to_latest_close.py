@@ -17,6 +17,15 @@ import build_dashboard  # noqa: E402
 
 
 REPORT_PATH = build_dashboard.OUTPUT_DIR / "LATEST_ENTRY_BASELINE_RESET_REPORT.json"
+LIVE_CYCLE_BASELINE_PATH = build_dashboard.STATE_DIR / "live_cycle_baseline.csv"
+LIVE_CYCLE_BASELINE_COLS = [
+    "market",
+    "cycle_rebalance_date",
+    "source_signal_date",
+    "rebalance_step_trading_days",
+    "baseline_type",
+    "created_at",
+]
 
 
 def now_iso() -> str:
@@ -51,6 +60,12 @@ def market_source_signal_date(market: str) -> str:
         )
         or ""
     )
+
+
+def market_rebalance_step(market: str) -> int:
+    rows = build_dashboard.read_csv(build_dashboard.OUTPUT_DIR / market / "latest_market_state.csv")
+    step = build_dashboard.as_int(build_dashboard.state_value(rows, "rebalance_step_trading_days", 0), 0)
+    return int(step or 0)
 
 
 def latest_close_rows(market: str, symbols: list[str]) -> list[dict[str, Any]]:
@@ -91,6 +106,36 @@ def latest_close_rows(market: str, symbols: list[str]) -> list[dict[str, Any]]:
     return out
 
 
+def write_live_cycle_baselines(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    by_market: dict[str, list[dict[str, Any]]] = {}
+    for row in rows:
+        by_market.setdefault(str(row.get("market", "")).upper(), []).append(row)
+
+    created_at = now_iso()
+    cycle_rows: list[dict[str, Any]] = []
+    for market in ["TW", "US"]:
+        market_rows = by_market.get(market, [])
+        dates = sorted({str(row.get("signal_date", "")) for row in market_rows if str(row.get("signal_date", ""))})
+        if not dates:
+            continue
+        cycle_rows.append(
+            {
+                "market": market,
+                "cycle_rebalance_date": dates[-1],
+                "source_signal_date": dates[-1],
+                "rebalance_step_trading_days": market_rebalance_step(market),
+                "baseline_type": "manual_go_live_close",
+                "created_at": created_at,
+            }
+        )
+    build_dashboard.STATE_DIR.mkdir(parents=True, exist_ok=True)
+    df = pd.DataFrame(cycle_rows, columns=LIVE_CYCLE_BASELINE_COLS)
+    tmp = LIVE_CYCLE_BASELINE_PATH.with_suffix(".csv.tmp")
+    df.to_csv(tmp, index=False, encoding="utf-8-sig")
+    tmp.replace(LIVE_CYCLE_BASELINE_PATH)
+    return cycle_rows
+
+
 def reset_entry_baseline_to_latest_close() -> dict[str, Any]:
     all_rows: list[dict[str, Any]] = []
     report: dict[str, Any] = {
@@ -110,7 +155,10 @@ def reset_entry_baseline_to_latest_close() -> dict[str, Any]:
             "baseline_dates": sorted({str(row["signal_date"]) for row in rows}),
         }
     build_dashboard.write_entry_baselines(all_rows)
+    cycle_rows = write_live_cycle_baselines(all_rows)
     report["baseline_path"] = str(build_dashboard.ENTRY_BASELINE_PATH)
+    report["live_cycle_baseline_path"] = str(LIVE_CYCLE_BASELINE_PATH)
+    report["live_cycle_baselines"] = cycle_rows
     report["total_reset_count"] = len(all_rows)
     write_json(REPORT_PATH, report)
     return report

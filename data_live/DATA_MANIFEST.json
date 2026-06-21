@@ -43,12 +43,14 @@
     "Use the research pack for retraining, full backtests, and anti-cheat verification."
   ],
   "last_price_update": {
-    "finished_at": "2026-06-20T05:54:32",
-    "status": "updated",
-    "new_rows_total": 13087,
+    "finished_at": "2026-06-21T22:46:07",
+    "status": "no_new_rows",
+    "new_rows_total": 0,
     "max_dates_after": {
+      "US_EXECUTION": "2026-06-18",
       "US_SCAN": "2026-06-18",
-      "US_EXECUTION": "2026-06-18"
+      "TW_STOCKS": "2026-06-18",
+      "TW_INDEX": "2026-06-18"
     }
   }
 }

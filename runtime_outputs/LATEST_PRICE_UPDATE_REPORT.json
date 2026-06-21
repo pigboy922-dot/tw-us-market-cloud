@@ -1,6 +1,134 @@
 {
   "ok": true,
-  "status": "skipped_full_market_update_target_only_mode",
-  "mode": "target_only",
-  "note": "Full TW/US market pools were not fetched. The update only refreshes current quotes for existing target/holding symbols after signal recalculation."
+  "status": "no_new_rows",
+  "source": "yfinance",
+  "started_at": "2026-06-21T22:45:54",
+  "finished_at": "2026-06-21T22:46:07",
+  "data_dir": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\01_LOCAL_RUN_REQUIRED\\CLOUD_DAILY_MARKET_POOL\\data_live",
+  "tail_rows_per_symbol": 420,
+  "chunk_size": 5,
+  "sleep_seconds": 3.0,
+  "timeout": 30,
+  "max_symbols_per_file": 0,
+  "daily_safe": true,
+  "new_rows_total": 0,
+  "possible_source_limit_or_no_new_data": false,
+  "source_rate_limited": false,
+  "max_dates_after": {
+    "US_EXECUTION": "2026-06-18",
+    "US_SCAN": "2026-06-18",
+    "TW_STOCKS": "2026-06-18",
+    "TW_INDEX": "2026-06-18"
+  },
+  "files": [
+    {
+      "label": "US_EXECUTION",
+      "status": "skipped_preflight_no_new_market_date",
+      "path": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\01_LOCAL_RUN_REQUIRED\\CLOUD_DAILY_MARKET_POOL\\data_live\\us_execution_prices_tail.csv",
+      "market": "US",
+      "before": {
+        "path": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\01_LOCAL_RUN_REQUIRED\\CLOUD_DAILY_MARKET_POOL\\data_live\\us_execution_prices_tail.csv",
+        "exists": true,
+        "rows": 39891,
+        "symbols": 95,
+        "min_date": "2024-10-15",
+        "max_date": "2026-06-18"
+      },
+      "after": {
+        "path": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\01_LOCAL_RUN_REQUIRED\\CLOUD_DAILY_MARKET_POOL\\data_live\\us_execution_prices_tail.csv",
+        "exists": true,
+        "rows": 39891,
+        "symbols": 95,
+        "min_date": "2024-10-15",
+        "max_date": "2026-06-18"
+      },
+      "remote_latest_date": "2026-06-18",
+      "attempted_symbols": 0,
+      "chunks_attempted": 0,
+      "new_rows": 0,
+      "updated_symbols": 0,
+      "error_count": 0,
+      "errors_sample": []
+    },
+    {
+      "label": "US_SCAN",
+      "status": "skipped_daily_safe_mode",
+      "before": {
+        "path": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\01_LOCAL_RUN_REQUIRED\\CLOUD_DAILY_MARKET_POOL\\data_live\\us_scan_prices_tail.csv",
+        "exists": true,
+        "rows": 336937,
+        "symbols": 812,
+        "min_date": "2024-10-09",
+        "max_date": "2026-06-18"
+      },
+      "after": {
+        "path": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\01_LOCAL_RUN_REQUIRED\\CLOUD_DAILY_MARKET_POOL\\data_live\\us_scan_prices_tail.csv",
+        "exists": true,
+        "rows": 336937,
+        "symbols": 812,
+        "min_date": "2024-10-09",
+        "max_date": "2026-06-18"
+      },
+      "new_rows": 0,
+      "error_count": 0
+    },
+    {
+      "label": "TW_STOCKS",
+      "status": "skipped_daily_safe_mode",
+      "before": {
+        "path": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\01_LOCAL_RUN_REQUIRED\\CLOUD_DAILY_MARKET_POOL\\data_live\\tw_strategy_prices_tail.csv",
+        "exists": true,
+        "rows": 817051,
+        "symbols": 1964,
+        "min_date": "2020-06-19",
+        "max_date": "2026-06-18"
+      },
+      "after": {
+        "path": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\01_LOCAL_RUN_REQUIRED\\CLOUD_DAILY_MARKET_POOL\\data_live\\tw_strategy_prices_tail.csv",
+        "exists": true,
+        "rows": 817051,
+        "symbols": 1964,
+        "min_date": "2020-06-19",
+        "max_date": "2026-06-18"
+      },
+      "new_rows": 0,
+      "error_count": 0
+    },
+    {
+      "label": "TW_INDEX",
+      "status": "skipped_preflight_no_new_market_date",
+      "path": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\01_LOCAL_RUN_REQUIRED\\CLOUD_DAILY_MARKET_POOL\\data_live\\tw_index_prices_tail.csv",
+      "market": "TW",
+      "before": {
+        "path": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\01_LOCAL_RUN_REQUIRED\\CLOUD_DAILY_MARKET_POOL\\data_live\\tw_index_prices_tail.csv",
+        "exists": true,
+        "rows": 420,
+        "symbols": 1,
+        "min_date": "2024-09-23",
+        "max_date": "2026-06-18"
+      },
+      "after": {
+        "path": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\01_LOCAL_RUN_REQUIRED\\CLOUD_DAILY_MARKET_POOL\\data_live\\tw_index_prices_tail.csv",
+        "exists": true,
+        "rows": 420,
+        "symbols": 1,
+        "min_date": "2024-09-23",
+        "max_date": "2026-06-18"
+      },
+      "remote_latest_date": "2026-06-18",
+      "attempted_symbols": 0,
+      "chunks_attempted": 0,
+      "new_rows": 0,
+      "updated_symbols": 0,
+      "error_count": 0,
+      "errors_sample": []
+    }
+  ],
+  "tw_map_update": {
+    "status": "updated",
+    "symbols": 1964,
+    "max_latest_price_date": "2026-06-18"
+  },
+  "progress_path": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\01_LOCAL_RUN_REQUIRED\\CLOUD_DAILY_MARKET_POOL\\runtime_outputs\\LATEST_MARKET_UPDATE_PROGRESS.txt",
+  "progress_json_path": "D:\\V1046_FULL_MARKET_STRATEGY_DATA_PACK\\01_LOCAL_RUN_REQUIRED\\CLOUD_DAILY_MARKET_POOL\\runtime_outputs\\LATEST_MARKET_UPDATE_PROGRESS.json"
 }

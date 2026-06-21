@@ -2,7 +2,7 @@
   "market_state": {
     "market": "US_SCAN",
     "latest_price_date": "2026-06-18",
-    "generated_at": "2026-06-20T07:26:26",
+    "generated_at": "2026-06-21T22:54:59",
     "scan_universe_symbols": 812,
     "top_stock": "SNDK",
     "top_theme": "memory_storage",
@@ -1134,7 +1134,7 @@
     {
       "rank": 14,
       "scan_theme": "fin_bank",
-      "theme_score": 0.3107623844282155,
+      "theme_score": 0.31076238442821547,
       "member_count": 14,
       "execution_pool_member_count": 0,
       "top_symbols": "TD|RY|FITB|BNY|EWBC|BNS|MTB|CM",
@@ -1170,7 +1170,7 @@
     {
       "rank": 18,
       "scan_theme": "software_platform",
-      "theme_score": 0.05225636950253723,
+      "theme_score": 0.05225636950253725,
       "member_count": 7,
       "execution_pool_member_count": 7,
       "top_symbols": "GOOGL|AMZN|ORCL|MSFT|META|CRM|ADBE",
