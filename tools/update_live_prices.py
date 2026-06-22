@@ -80,6 +80,43 @@ def env_bool(name: str, default: bool = False) -> bool:
     return str(value).strip().lower() in {"1", "true", "yes", "y", "on"}
 
 
+def latest_completed_market_date(market: str, now: datetime | None = None) -> pd.Timestamp | None:
+    """Latest date that is allowed to be treated as a completed daily bar."""
+    market = str(market).upper()
+    now = now or datetime.now()
+    today = pd.Timestamp(now.date())
+    if market == "TW":
+        cutoff_hour = int(os.getenv("TW_MARKET_DAILY_COMPLETE_HOUR", "15"))
+        cutoff_minute = int(os.getenv("TW_MARKET_DAILY_COMPLETE_MINUTE", "30"))
+        if (now.hour, now.minute) < (cutoff_hour, cutoff_minute):
+            return today - pd.Timedelta(days=1)
+        return today
+    return None
+
+
+def is_incomplete_market_date(value: Any, market: str, now: datetime | None = None) -> bool:
+    max_date = latest_completed_market_date(market, now=now)
+    if max_date is None:
+        return False
+    try:
+        ts = pd.Timestamp(value).normalize()
+    except Exception:
+        return False
+    if pd.isna(ts):
+        return False
+    return ts > max_date
+
+
+def filter_completed_daily_rows(df: pd.DataFrame, market: str) -> pd.DataFrame:
+    if df is None or df.empty or "date" not in df.columns:
+        return df
+    max_date = latest_completed_market_date(market)
+    if max_date is None:
+        return df
+    dates = pd.to_datetime(df["date"], errors="coerce").dt.normalize()
+    return df.loc[dates.le(max_date)].copy()
+
+
 def is_rate_limited(text: str) -> bool:
     return "rate_limited" in text or "Too Many Requests" in text or "Rate limited" in text or "YFRateLimitError" in text
 
@@ -293,6 +330,9 @@ def remote_latest_date(market: str, timeout: int) -> str | None:
         )
         if data.empty:
             continue
+        data = filter_completed_daily_rows(data, market)
+        if data.empty:
+            continue
         ts = pd.to_datetime(data["date"], errors="coerce").max()
         if pd.isna(ts):
             continue
@@ -396,6 +436,7 @@ def update_price_file(
     errors: list[dict[str, Any]] = []
     chunks_attempted = 0
     consecutive_errors = 0
+    incomplete_rows_skipped = 0
     aborted_reason = ""
     started_clock = time.monotonic()
     max_runtime_seconds = int(os.getenv("LIVE_UPDATE_MAX_RUNTIME_SECONDS", "0"))
@@ -455,6 +496,27 @@ def update_price_file(
                 )
                 break
         if not data.empty:
+            raw_len = len(data)
+            data = filter_completed_daily_rows(data, market)
+            skipped = raw_len - len(data)
+            if skipped > 0:
+                incomplete_rows_skipped += int(skipped)
+                progress(
+                    f"{label}: chunk {chunks_attempted}/{total_chunks} skipped {skipped} incomplete same-day rows",
+                    label=label,
+                    stage="skip_incomplete_daily",
+                    chunk=chunks_attempted,
+                    skipped_rows=int(skipped),
+                    market=market,
+                )
+            if data.empty:
+                progress(
+                    f"{label}: chunk {chunks_attempted}/{total_chunks} contained only incomplete daily rows",
+                    label=label,
+                    stage="chunk_incomplete_only",
+                    chunk=chunks_attempted,
+                )
+                continue
             consecutive_errors = 0
             keep_rows = []
             for sym, part in data.groupby("symbol", sort=False):
@@ -525,6 +587,7 @@ def update_price_file(
         "chunks_attempted": int(chunks_attempted),
         "new_rows": int(len(new_df)),
         "updated_symbols": int(new_df["symbol"].nunique()) if len(new_df) else 0,
+        "incomplete_rows_skipped": int(incomplete_rows_skipped),
         "error_count": int(len(errors)),
         "errors_sample": errors[:8],
         "aborted": bool(aborted_reason),
@@ -583,6 +646,7 @@ def update_tw_map_latest() -> dict[str, Any]:
         parse_dates=["date"],
         low_memory=False,
     )
+    prices = filter_completed_daily_rows(prices, "TW")
     prices["close"] = pd.to_numeric(prices["close"], errors="coerce")
     prices["volume"] = pd.to_numeric(prices["volume"], errors="coerce")
     latest = prices.sort_values(["symbol", "date"]).dropna(subset=["symbol"]).groupby("symbol", as_index=False).tail(1)

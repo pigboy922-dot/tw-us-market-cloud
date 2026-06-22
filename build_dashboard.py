@@ -1176,6 +1176,8 @@ def clean_order_panel(
             price_meta = f"校正價 {current_price_date} / 收盤日 {price_date}"
         elif current_price_source == "manual_ui":
             price_meta = f"校正價 {current_price_date or price_date}"
+        elif current_price_source.endswith("_intraday"):
+            price_meta = f"盤中/最新 {current_price_date or price_date}"
         else:
             price_meta = f"收盤日 {price_date}"
         signal_text = "-" if is_cash or not signal_date or signal_close is None else f"{signal_date} @ {signal_close:.2f}"

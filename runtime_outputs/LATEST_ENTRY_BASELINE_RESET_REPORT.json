@@ -1,11 +1,11 @@
 {
   "ok": true,
   "status": "reset_to_latest_close",
-  "generated_at": "2026-06-21T23:56:20",
+  "generated_at": "2026-06-22T11:12:06",
   "markets": {
     "TW": {
       "target_symbols": [
-        "2327.TW"
+        "2492.TW"
       ],
       "reset_count": 1,
       "source_signal_date": "2026-06-18",
@@ -36,7 +36,7 @@
       "source_signal_date": "2026-06-18",
       "rebalance_step_trading_days": 46,
       "baseline_type": "manual_go_live_close",
-      "created_at": "2026-06-21T23:56:28"
+      "created_at": "2026-06-22T11:12:14"
     },
     {
       "market": "US",
@@ -44,7 +44,7 @@
       "source_signal_date": "2026-06-18",
       "rebalance_step_trading_days": 10,
       "baseline_type": "manual_go_live_close",
-      "created_at": "2026-06-21T23:56:28"
+      "created_at": "2026-06-22T11:12:14"
     }
   ],
   "total_reset_count": 5

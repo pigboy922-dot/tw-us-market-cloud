@@ -1,0 +1,30 @@
+{
+  "max_completed_tw_date": "2026-06-21",
+  "files": [
+    {
+      "file": "data_live/tw_strategy_prices_tail.csv",
+      "exists": true,
+      "rows": 815142,
+      "date_max": "2026-06-18"
+    },
+    {
+      "file": "data_live/tw_index_prices_tail.csv",
+      "exists": true,
+      "rows": 419,
+      "date_max": "2026-06-18"
+    },
+    {
+      "file": "state/current_prices.csv",
+      "exists": true,
+      "rows": 9,
+      "price_date_max": "2026-06-22",
+      "tw_intraday_rows": 2
+    },
+    {
+      "file": "data_live/tw_strategy_group_map.csv",
+      "exists": true,
+      "rows": 1978,
+      "latest_price_date_max": "2026-06-18"
+    }
+  ]
+}

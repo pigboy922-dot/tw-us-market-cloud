@@ -18,7 +18,7 @@ if str(PACKAGE_ROOT) not in sys.path:
     sys.path.insert(0, str(PACKAGE_ROOT))
 
 import build_dashboard  # noqa: E402
-from tools.update_live_prices import clean, download_chunk, write_json  # noqa: E402
+from tools.update_live_prices import clean, download_chunk, is_incomplete_market_date, write_json  # noqa: E402
 
 
 REPORT_PATH = build_dashboard.OUTPUT_DIR / "LATEST_TARGET_PRICE_REFRESH_REPORT.json"
@@ -165,17 +165,18 @@ def refresh_market(
                         }
                     )
                     continue
+                source = "yfinance_target_intraday" if is_incomplete_market_date(quote_date, market) else "yfinance_target_daily"
                 updated_rows.append(
                     {
                         "market": market,
                         "symbol": str(symbol),
                         "current_price": float(quote["close"]),
                         "price_date": quote_date.strftime("%Y-%m-%d"),
-                        "source": "yfinance_target_daily",
+                        "source": source,
                         "updated_at": now_iso(),
                     }
                 )
-                progress(f"{market}: updated {symbol} price={float(quote['close']):.4f} date={quote_date.strftime('%Y-%m-%d')}")
+                progress(f"{market}: updated {symbol} price={float(quote['close']):.4f} date={quote_date.strftime('%Y-%m-%d')} source={source}")
         if sleep_seconds > 0 and idx + chunk_size < len(symbols):
             time.sleep(sleep_seconds)
 

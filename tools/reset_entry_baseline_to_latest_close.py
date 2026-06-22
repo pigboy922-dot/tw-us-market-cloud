@@ -14,6 +14,7 @@ if str(BASE_DIR) not in sys.path:
     sys.path.insert(0, str(BASE_DIR))
 
 import build_dashboard  # noqa: E402
+from tools.update_live_prices import is_incomplete_market_date  # noqa: E402
 
 
 REPORT_PATH = build_dashboard.OUTPUT_DIR / "LATEST_ENTRY_BASELINE_RESET_REPORT.json"
@@ -72,6 +73,12 @@ def latest_close_rows(market: str, symbols: list[str]) -> list[dict[str, Any]]:
     history = build_dashboard.price_history_frame(market, set(symbols))
     latest_by_symbol: dict[str, dict[str, Any]] = {}
     if not history.empty:
+        history = history.copy()
+        history["_date_ts"] = pd.to_datetime(history["date"], errors="coerce")
+        history = history.loc[
+            history["_date_ts"].notna()
+            & ~history["_date_ts"].map(lambda ts: is_incomplete_market_date(ts, market))
+        ].drop(columns=["_date_ts"])
         latest = history.sort_values(["symbol", "date"]).groupby("symbol", as_index=False).tail(1)
         for row in latest.to_dict(orient="records"):
             latest_by_symbol[str(row["symbol"])] = {
@@ -90,6 +97,8 @@ def latest_close_rows(market: str, symbols: list[str]) -> list[dict[str, Any]]:
             close = build_dashboard.as_float(fallback.get("close") or fallback.get("current_price"))
             date = str(fallback.get("date") or fallback.get("current_price_date") or "")
             if close is None or close <= 0 or not date:
+                continue
+            if is_incomplete_market_date(date, market):
                 continue
             rec = {"signal_date": date, "signal_close": close}
         out.append(
