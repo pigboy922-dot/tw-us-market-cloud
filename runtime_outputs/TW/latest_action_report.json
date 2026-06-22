@@ -2,18 +2,25 @@
   "market_state": {
     "market": "TW",
     "latest_price_date": "2026-06-18",
-    "generated_at": "2026-06-21T23:56:37",
-    "frozen_strategy": "TW_TOP1_TOP2_SWITCH_H46_TH020_CLEAN",
+    "generated_at": "2026-06-22T09:49:15",
+    "frozen_strategy": "TW_ATTACK_RECOMMEND_FUSION_H46_EDGE005_CLEAN",
     "execution_overlay": "TW_EQUAL_WEIGHT",
-    "strategy_mode": "top1_top2_switch_h46_th020",
+    "strategy_mode": "attack_recommend_fusion_h46_edge005",
     "outer_mode": "DEFENSE_040838__TOP1",
     "theme_alloc": 1.0,
     "regime_state": 2,
-    "regime_state_label": "top1_top2_switch_h46_th020",
+    "regime_state_label": "attack_recommend_fusion_h46_edge005",
     "selected_component": "DEFENSE_040838__TOP1",
+    "selected_sleeve": "attack",
     "component_signal_date": "2026-06-18",
     "component_rebalance_date": "2026-06-18",
-    "component_top_score": 0.6451507360937982,
+    "component_top_score": 0.5209533492052429,
+    "component_second_score": 0.49006827913358897,
+    "attack_score": 0.455748008895623,
+    "recommend_score": 0.3073196089363748,
+    "attack_edge": 0.14842839995924823,
+    "attack_dd60": 0.0,
+    "attack_r60": 0.5274669881598333,
     "rebalance_step_trading_days": 46,
     "trading_days_since_rebalance": 0,
     "trading_days_since_signal": 0,
@@ -22,7 +29,7 @@
     "rebalance_due_next_session_by_counter": false,
     "rebalance_count_basis": "live_go_live_cycle",
     "action_signal": "hold_live_cycle_target",
-    "notes": "TW production target uses clean Top1/Top2 Switch H46 threshold 0.20, then applies execution overlay: equal weight across selected stocks. Manual go-live baseline recomputes the initial live target from that baseline close and then holds it until the next live cycle. No retraining in cloud package. Live cycle starts from 2026-06-18 because formal deployment was reset manually.",
+    "notes": "TW production target uses clean Attack/Recommend Fusion H46. Attack sleeve is used only when its sleeve score beats recommend by 0.05, attack 60D return is non-negative, and attack 60D drawdown stays above -60%; otherwise recommend sleeve is used. Execution overlay remains equal weight across selected stocks. Manual go-live baseline recomputes the initial live target from that baseline close and then holds it until the next live cycle. No retraining in cloud package. Live cycle starts from 2026-06-18 because formal deployment was reset manually.",
     "research_component_rebalance_date": "2026-06-18",
     "live_cycle_rebalance_date": "2026-06-18",
     "live_cycle_source_signal_date": "2026-06-18",
@@ -33,7 +40,7 @@
       "symbol": "2327.TW",
       "name": "國巨*",
       "theme": "passive_component",
-      "role": "top1_top2_switch_DEFENSE_040838__TOP1|equal_weight_exec",
+      "role": "tw_fusion_attack_DEFENSE_040838__TOP1|equal_weight_exec",
       "target_weight": 1.0,
       "raw_target_weight": 1.0,
       "source_sleeve": "DEFENSE_040838__TOP1",
@@ -46,7 +53,7 @@
       "symbol": "2327.TW",
       "name": "國巨*",
       "theme": "passive_component",
-      "role": "top1_top2_switch_DEFENSE_040838__TOP1",
+      "role": "tw_fusion_attack_DEFENSE_040838__TOP1",
       "target_weight": 1.0
     }
   ],
@@ -54,49 +61,49 @@
     {
       "rank": 1,
       "theme": "DEFENSE_040838__TOP1",
-      "theme_score": 0.6451507360937982,
+      "theme_score": 0.5209533492052429,
       "selected": true
     },
     {
       "rank": 2,
-      "theme": "TOP5_041880__TOP1",
-      "theme_score": 0.6161571994762747,
+      "theme": "VALMAX_046612__TOP2",
+      "theme_score": 0.49006827913358897,
       "selected": false
     },
     {
       "rank": 3,
       "theme": "VALMAX_046612__TOP1",
-      "theme_score": 0.6161571994762736,
+      "theme_score": 0.47099676294016923,
       "selected": false
     },
     {
       "rank": 4,
-      "theme": "VALMAX_046612__TOP2",
-      "theme_score": 0.5977795397936401,
+      "theme": "TOP5_041880__TOP1",
+      "theme_score": 0.4709967629401689,
       "selected": false
     },
     {
       "rank": 5,
       "theme": "DEFENSE_040838__TOP2",
-      "theme_score": 0.5635081782806366,
+      "theme_score": 0.455748008895623,
       "selected": false
     },
     {
       "rank": 6,
       "theme": "TOP5_041880__TOP2",
-      "theme_score": 0.5245553425985912,
+      "theme_score": 0.374887677731619,
       "selected": false
     },
     {
       "rank": 7,
-      "theme": "BALANCED_058008__TOP2",
-      "theme_score": 0.28759971284378966,
+      "theme": "BALANCED_058008__TOP1",
+      "theme_score": 0.1879880569039442,
       "selected": false
     },
     {
       "rank": 8,
-      "theme": "BALANCED_058008__TOP1",
-      "theme_score": 0.21137999258217818,
+      "theme": "BALANCED_058008__TOP2",
+      "theme_score": 0.14426318084376547,
       "selected": false
     }
   ],

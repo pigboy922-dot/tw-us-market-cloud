@@ -1,2 +1,2 @@
 ﻿symbol,name,theme,role,target_weight,raw_target_weight,source_sleeve,execution_group,execution_overlay
-2327.TW,國巨*,passive_component,top1_top2_switch_DEFENSE_040838__TOP1|equal_weight_exec,1.0,1.0,DEFENSE_040838__TOP1,main,TW_EQUAL_WEIGHT
+2327.TW,國巨*,passive_component,tw_fusion_attack_DEFENSE_040838__TOP1|equal_weight_exec,1.0,1.0,DEFENSE_040838__TOP1,main,TW_EQUAL_WEIGHT

@@ -2,8 +2,8 @@
   "ok": true,
   "status": "updated",
   "source": "yfinance_target_only",
-  "started_at": "2026-06-21T23:56:43",
-  "finished_at": "2026-06-21T23:56:57",
+  "started_at": "2026-06-22T09:49:20",
+  "finished_at": "2026-06-22T09:49:36",
   "lookback_days": 21,
   "chunk_size": 1,
   "sleep_seconds": 1.0,
@@ -23,7 +23,7 @@
     {
       "market": "TW",
       "status": "updated",
-      "start": "2026-05-31",
+      "start": "2026-06-01",
       "symbols": [
         "2327.TW"
       ],
@@ -39,7 +39,7 @@
     {
       "market": "US",
       "status": "updated",
-      "start": "2026-05-31",
+      "start": "2026-06-01",
       "symbols": [
         "ARM",
         "MRVL",

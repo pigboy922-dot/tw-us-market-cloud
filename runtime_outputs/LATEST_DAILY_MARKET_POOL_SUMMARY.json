@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-21T23:56:43",
+  "generated_at": "2026-06-22T09:49:20",
   "package": "CLOUD_DAILY_MARKET_POOL",
   "data_mode": "compact_tail",
   "TW": {
@@ -7,6 +7,10 @@
     "outer_mode": "DEFENSE_040838__TOP1",
     "theme_alloc": 1.0,
     "regime_state": 2,
+    "strategy_mode": "attack_recommend_fusion_h46_edge005",
+    "selected_sleeve": "attack",
+    "selected_component": "DEFENSE_040838__TOP1",
+    "attack_edge": 0.14842839995924823,
     "component_signal_date": "2026-06-18",
     "component_rebalance_date": "2026-06-18",
     "rebalance_step_trading_days": 46,
@@ -20,7 +24,7 @@
         "symbol": "2327.TW",
         "name": "國巨*",
         "theme": "passive_component",
-        "role": "top1_top2_switch_DEFENSE_040838__TOP1|equal_weight_exec",
+        "role": "tw_fusion_attack_DEFENSE_040838__TOP1|equal_weight_exec",
         "target_weight": 1.0,
         "raw_target_weight": 1.0,
         "source_sleeve": "DEFENSE_040838__TOP1",

@@ -2964,13 +2964,23 @@ TW_TOP1_COMPONENT_RULES = {
     },
 }
 
-TW_PRODUCTION_STRATEGY_ID = "TW_TOP1_TOP2_SWITCH_H46_TH020_CLEAN"
+TW_PRODUCTION_STRATEGY_ID = "TW_ATTACK_RECOMMEND_FUSION_H46_EDGE005_CLEAN"
 TW_PRODUCTION_REBALANCE_STEP = 46
 TW_PRODUCTION_EXECUTION_TOP_N = 2
+TW_PRODUCTION_FALLBACK_LEG = "DEFENSE_040838__TOP2"
+TW_PRODUCTION_STRATEGY_MODE = "attack_recommend_fusion_h46_edge005"
 TW_PRODUCTION_SWITCH_THRESHOLD = 0.20
 TW_PRODUCTION_CURRENT_MODE_BONUS = 0.05
-TW_PRODUCTION_FALLBACK_LEG = "DEFENSE_040838__TOP2"
-TW_PRODUCTION_STRATEGY_MODE = "top1_top2_switch_h46_th020"
+TW_ATTACK_COMPONENT_SCORE_WEIGHTS = (0.45, 0.35, 0.15, 0.05)
+TW_RECOMMEND_COMPONENT_SCORE_WEIGHTS = (0.20, 0.20, 0.45, 0.15)
+TW_FUSION_SLEEVE_SCORE_WEIGHTS = (0.45, 0.35, 0.15, 0.05)
+TW_ATTACK_COMPONENT_THRESHOLD = 0.05
+TW_ATTACK_CURRENT_MODE_BONUS = 0.10
+TW_RECOMMEND_COMPONENT_THRESHOLD = 0.16
+TW_RECOMMEND_CURRENT_MODE_BONUS = 0.00
+TW_FUSION_ATTACK_EDGE_THRESHOLD = 0.05
+TW_FUSION_ATTACK_MIN_DD60 = -0.60
+TW_FUSION_ATTACK_MIN_R60 = 0.00
 
 
 def tw_leg_base(component: str) -> str:
@@ -3063,6 +3073,10 @@ def tw_simulate_component(
     pos_rows: list[dict[str, Any]] = []
     score = features[str(rule["score"])]
     for j, date in enumerate(dates):
+        if j > 0:
+            daily = float((ret.iloc[j] * weights).sum())
+            equity *= 1.0 + daily
+        eq_vals.append(equity)
         if j == 0 or j % int(rule["rebalance_n"]) == 0:
             sig_i = max(0, j - 1)
             sig_date = dates[sig_i]
@@ -3093,10 +3107,6 @@ def tw_simulate_component(
                     "weights": "|".join(f"{float(x):.6f}" for x in active.values),
                 }
             )
-        if j > 0:
-            daily = float((ret.iloc[j] * weights).sum())
-            equity *= 1.0 + daily
-        eq_vals.append(equity)
     return pd.Series(eq_vals, index=dates, name=name), pd.DataFrame(pos_rows), weights.copy()
 
 
@@ -3108,39 +3118,264 @@ def tw_top1_switch_score(component_equity: pd.DataFrame) -> pd.DataFrame:
     return 0.25 * r20 + 0.35 * r60 + 0.30 * r120 + 0.10 * dd60
 
 
-def tw_select_top1_component(component_equity: pd.DataFrame) -> tuple[pd.DataFrame, pd.Series]:
+def tw_component_switch_score(component_equity: pd.DataFrame, weights: tuple[float, float, float, float]) -> pd.DataFrame:
+    r20 = component_equity / component_equity.shift(20) - 1.0
+    r60 = component_equity / component_equity.shift(60) - 1.0
+    r120 = component_equity / component_equity.shift(120) - 1.0
+    dd60 = component_equity / component_equity.rolling(60, min_periods=20).max() - 1.0
+    w20, w60, w120, wdd = weights
+    return w20 * r20 + w60 * r60 + w120 * r120 + wdd * dd60
+
+
+def tw_sleeve_score(equity: pd.Series, weights: tuple[float, float, float, float]) -> pd.Series:
+    r20 = equity / equity.shift(20) - 1.0
+    r60 = equity / equity.shift(60) - 1.0
+    r120 = equity / equity.shift(120) - 1.0
+    dd60 = equity / equity.rolling(60, min_periods=20).max() - 1.0
+    w20, w60, w120, wdd = weights
+    return w20 * r20 + w60 * r60 + w120 * r120 + wdd * dd60
+
+
+def tw_latest_component_position(component_positions: dict[str, Any], component: str, date_str: str) -> dict[str, Any] | None:
+    pos = component_positions.get(component)
+    if pos is None:
+        return None
+    if isinstance(pos, pd.DataFrame):
+        if pos.empty or "date" not in pos.columns:
+            return None
+        frame = pos[pos["date"].astype(str) <= date_str]
+        if frame.empty:
+            return None
+        return frame.iloc[-1].to_dict()
+    if isinstance(pos, list):
+        best = None
+        for row in pos:
+            if str(row.get("date", "")) <= date_str:
+                best = row
+            else:
+                break
+        return dict(best) if best is not None else None
+    return None
+
+
+def tw_parse_position_weights(row: dict[str, Any] | None) -> tuple[list[str], list[float]]:
+    if row is None:
+        return [], []
+    syms = [s for s in str(row.get("symbols", "")).split("|") if s]
+    weights: list[float] = []
+    for raw in [s for s in str(row.get("weights", "")).split("|") if s]:
+        try:
+            weights.append(float(raw))
+        except Exception:
+            weights.append(0.0)
+    return syms, weights
+
+
+def tw_component_position_weights(
+    component_positions: dict[str, Any],
+    component: str,
+    date: pd.Timestamp,
+    symbols: list[str],
+    equal_execution: bool = True,
+) -> tuple[dict[str, float], list[str], list[float], list[float]]:
+    row = tw_latest_component_position(component_positions, component, pd.Timestamp(date).strftime("%Y-%m-%d"))
+    syms, raw_ws = tw_parse_position_weights(row)
+    syms = [sym for sym in syms if sym in symbols]
+    raw_ws = raw_ws[: len(syms)]
+    gross = min(1.0, max(0.0, float(sum(raw_ws)))) if raw_ws else 0.0
+    if not syms or gross <= 0:
+        return {}, syms, raw_ws, []
+    exec_ws = [gross / len(syms)] * len(syms) if equal_execution else raw_ws
+    return {sym: float(weight) for sym, weight in zip(syms, exec_ws)}, syms, raw_ws, exec_ws
+
+
+def tw_simulate_component_switch(
+    component_equity: pd.DataFrame,
+    score_weights: tuple[float, float, float, float],
+    min_top_score: float,
+    stay_bonus: float,
+    fallback: str,
+    sleeve_name: str,
+    component_positions: dict[str, Any] | None = None,
+    close: pd.DataFrame | None = None,
+) -> tuple[pd.Series, pd.DataFrame]:
     dates = component_equity.index
-    scores = tw_top1_switch_score(component_equity)
+    scores = tw_component_switch_score(component_equity, score_weights)
+    component_ret = component_equity.pct_change(fill_method=None).replace([np.inf, -np.inf], np.nan).fillna(0.0)
+    stock_ret = None
+    stock_weights = None
+    stock_symbols: list[str] = []
+    if close is not None:
+        stock_symbols = list(close.columns)
+        stock_ret = close.pct_change(fill_method=None).replace([np.inf, -np.inf], np.nan).fillna(0.0)
+        stock_weights = pd.Series(0.0, index=stock_symbols, dtype=float)
+    equity = 1.0
+    eq_vals: list[float] = []
     selected_rows: list[dict[str, Any]] = []
-    mode = TW_PRODUCTION_FALLBACK_LEG
+    mode = fallback
     for j, date in enumerate(dates):
+        if j > 0:
+            if stock_ret is not None and stock_weights is not None:
+                daily = float((stock_ret.iloc[j] * stock_weights).sum())
+            else:
+                daily = float(component_ret.iloc[j].get(mode, 0.0)) if mode in component_ret.columns else 0.0
+            equity *= 1.0 + daily
+        eq_vals.append(float(equity))
         if j == 0 or j % TW_PRODUCTION_REBALANCE_STEP == 0:
             sig_i = max(0, j - 1)
             sig_date = dates[sig_i]
             row = scores.iloc[sig_i].copy()
             if mode in row.index and np.isfinite(row.get(mode, np.nan)):
-                row.at[mode] = float(row.at[mode]) + TW_PRODUCTION_CURRENT_MODE_BONUS
+                row.at[mode] = float(row.at[mode]) + float(stay_bonus)
             row = row.replace([np.inf, -np.inf], np.nan).dropna()
             top_score = float("nan")
-            selected = TW_PRODUCTION_FALLBACK_LEG
+            second_score = float("nan")
+            selected = fallback
             if len(row):
                 ranked = row.sort_values(ascending=False)
                 top_score = float(ranked.iloc[0])
-                selected = str(ranked.index[0]) if top_score >= TW_PRODUCTION_SWITCH_THRESHOLD else TW_PRODUCTION_FALLBACK_LEG
+                second_score = float(ranked.iloc[1]) if len(ranked) > 1 else float("nan")
+                selected = str(ranked.index[0]) if top_score >= float(min_top_score) else fallback
             mode = selected
+            pos_weights: dict[str, float] = {}
+            pos_syms: list[str] = []
+            raw_ws: list[float] = []
+            exec_ws: list[float] = []
+            if stock_weights is not None:
+                stock_weights[:] = 0.0
+                if component_positions is not None:
+                    pos_weights, pos_syms, raw_ws, exec_ws = tw_component_position_weights(
+                        component_positions,
+                        mode,
+                        pd.Timestamp(date),
+                        stock_symbols,
+                        equal_execution=True,
+                    )
+                    for sym, weight in pos_weights.items():
+                        stock_weights.at[sym] = float(weight)
+            selected_rows.append(
+                {
+                    "date": date.strftime("%Y-%m-%d"),
+                    "signal_date": sig_date.strftime("%Y-%m-%d"),
+                    "score_preset": TW_PRODUCTION_STRATEGY_ID,
+                    "mode": f"{TW_PRODUCTION_STRATEGY_MODE}_{sleeve_name}",
+                    "selected_sleeve": sleeve_name,
+                    "selected": mode,
+                    "selected_component": mode,
+                    "top_score": top_score,
+                    "second_score": second_score,
+                    "fallback": fallback,
+                    "component_weights": f"{mode}:1.000000",
+                    "symbols": "|".join(pos_syms),
+                    "raw_weights": "|".join(f"{float(x):.6f}" for x in raw_ws),
+                    "exec_weights": "|".join(f"{float(x):.6f}" for x in exec_ws),
+                }
+            )
+    return pd.Series(eq_vals, index=dates, dtype=float, name=sleeve_name), pd.DataFrame(selected_rows)
+
+
+def tw_fusion_sleeve_metrics(attack_eq: pd.Series, recommend_eq: pd.Series) -> dict[str, pd.Series]:
+    attack_score = tw_sleeve_score(attack_eq, TW_FUSION_SLEEVE_SCORE_WEIGHTS)
+    recommend_score = tw_sleeve_score(recommend_eq, TW_FUSION_SLEEVE_SCORE_WEIGHTS)
+    return {
+        "attack_score": attack_score,
+        "recommend_score": recommend_score,
+        "attack_edge": attack_score - recommend_score,
+        "attack_dd60": attack_eq / attack_eq.rolling(60, min_periods=20).max() - 1.0,
+        "attack_r60": attack_eq / attack_eq.shift(60) - 1.0,
+    }
+
+
+def tw_should_use_attack(metric_row: dict[str, float]) -> bool:
+    edge = float(metric_row.get("attack_edge", np.nan))
+    dd60 = float(metric_row.get("attack_dd60", np.nan))
+    r60 = float(metric_row.get("attack_r60", np.nan))
+    return (
+        np.isfinite(edge)
+        and np.isfinite(dd60)
+        and np.isfinite(r60)
+        and edge >= TW_FUSION_ATTACK_EDGE_THRESHOLD
+        and dd60 >= TW_FUSION_ATTACK_MIN_DD60
+        and r60 >= TW_FUSION_ATTACK_MIN_R60
+    )
+
+
+def tw_select_fusion_component(
+    component_equity: pd.DataFrame,
+    component_positions: dict[str, Any] | None = None,
+    close: pd.DataFrame | None = None,
+) -> tuple[pd.DataFrame, pd.Series]:
+    attack_eq, attack_modes = tw_simulate_component_switch(
+        component_equity,
+        TW_ATTACK_COMPONENT_SCORE_WEIGHTS,
+        TW_ATTACK_COMPONENT_THRESHOLD,
+        TW_ATTACK_CURRENT_MODE_BONUS,
+        TW_PRODUCTION_FALLBACK_LEG,
+        "attack",
+        component_positions,
+        close,
+    )
+    recommend_eq, recommend_modes = tw_simulate_component_switch(
+        component_equity,
+        TW_RECOMMEND_COMPONENT_SCORE_WEIGHTS,
+        TW_RECOMMEND_COMPONENT_THRESHOLD,
+        TW_RECOMMEND_CURRENT_MODE_BONUS,
+        TW_PRODUCTION_FALLBACK_LEG,
+        "recommend",
+        component_positions,
+        close,
+    )
+    metrics = tw_fusion_sleeve_metrics(attack_eq, recommend_eq)
+    attack_by_date = attack_modes.set_index("date").to_dict("index") if not attack_modes.empty else {}
+    recommend_by_date = recommend_modes.set_index("date").to_dict("index") if not recommend_modes.empty else {}
+    selected_rows: list[dict[str, Any]] = []
+    selected_component = TW_PRODUCTION_FALLBACK_LEG
+    selected_sleeve = "recommend"
+    dates = component_equity.index
+    for j, date in enumerate(dates):
+        if j == 0 or j % TW_PRODUCTION_REBALANCE_STEP == 0:
+            sig_i = max(0, j - 1)
+            sig_date = dates[sig_i]
+            metric_row = {
+                "attack_score": float(metrics["attack_score"].iloc[sig_i]),
+                "recommend_score": float(metrics["recommend_score"].iloc[sig_i]),
+                "attack_edge": float(metrics["attack_edge"].iloc[sig_i]),
+                "attack_dd60": float(metrics["attack_dd60"].iloc[sig_i]),
+                "attack_r60": float(metrics["attack_r60"].iloc[sig_i]),
+            }
+            selected_sleeve = "attack" if tw_should_use_attack(metric_row) else "recommend"
+            sleeve_row = (attack_by_date if selected_sleeve == "attack" else recommend_by_date).get(date.strftime("%Y-%m-%d"), {})
+            selected_component = str(sleeve_row.get("selected_component") or sleeve_row.get("selected") or TW_PRODUCTION_FALLBACK_LEG)
+            top_score = float(sleeve_row.get("top_score", np.nan))
             selected_rows.append(
                 {
                     "date": date.strftime("%Y-%m-%d"),
                     "signal_date": sig_date.strftime("%Y-%m-%d"),
                     "score_preset": TW_PRODUCTION_STRATEGY_ID,
                     "mode": TW_PRODUCTION_STRATEGY_MODE,
-                    "selected": mode,
+                    "selected_sleeve": selected_sleeve,
+                    "selected": selected_component,
+                    "selected_component": selected_component,
                     "top_score": top_score,
+                    "second_score": sleeve_row.get("second_score", np.nan),
+                    "attack_score": metric_row["attack_score"],
+                    "recommend_score": metric_row["recommend_score"],
+                    "attack_edge": metric_row["attack_edge"],
+                    "attack_dd60": metric_row["attack_dd60"],
+                    "attack_r60": metric_row["attack_r60"],
                     "fallback": TW_PRODUCTION_FALLBACK_LEG,
-                    "component_weights": f"{mode}:1.000000",
+                    "component_weights": f"{selected_component}:1.000000",
                 }
             )
-    return pd.DataFrame(selected_rows), pd.Series([mode], index=[dates[-1]])
+    return pd.DataFrame(selected_rows), pd.Series([selected_component], index=[dates[-1]])
+
+
+def tw_select_top1_component(
+    component_equity: pd.DataFrame,
+    component_positions: dict[str, Any] | None = None,
+    close: pd.DataFrame | None = None,
+) -> tuple[pd.DataFrame, pd.Series]:
+    return tw_select_fusion_component(component_equity, component_positions, close)
 
 
 def apply_tw_equal_weight_execution_overlay(target_rows: list[dict[str, Any]], source_component: str) -> list[dict[str, Any]]:
@@ -3223,6 +3458,7 @@ def tw_live_go_live_selection(
     symbol_map: pd.DataFrame,
     features: dict[str, pd.DataFrame],
     component_eq: pd.DataFrame,
+    component_positions: dict[str, Any] | None = None,
 ) -> dict[str, Any] | None:
     rec = live_cycle_baseline("TW")
     if not rec or str(rec.get("baseline_type", "")) != "manual_go_live_close":
@@ -3240,13 +3476,46 @@ def tw_live_go_live_selection(
         return None
     signal_i = int(locs[-1])
     signal_date = pd.Timestamp(close.index[signal_i]).strftime("%Y-%m-%d")
-    scores = tw_top1_switch_score(component_eq).iloc[signal_i].replace([np.inf, -np.inf], np.nan).dropna()
+    attack_eq, _attack_modes = tw_simulate_component_switch(
+        component_eq,
+        TW_ATTACK_COMPONENT_SCORE_WEIGHTS,
+        TW_ATTACK_COMPONENT_THRESHOLD,
+        TW_ATTACK_CURRENT_MODE_BONUS,
+        TW_PRODUCTION_FALLBACK_LEG,
+        "attack",
+        component_positions,
+        close,
+    )
+    recommend_eq, _recommend_modes = tw_simulate_component_switch(
+        component_eq,
+        TW_RECOMMEND_COMPONENT_SCORE_WEIGHTS,
+        TW_RECOMMEND_COMPONENT_THRESHOLD,
+        TW_RECOMMEND_CURRENT_MODE_BONUS,
+        TW_PRODUCTION_FALLBACK_LEG,
+        "recommend",
+        component_positions,
+        close,
+    )
+    metrics = tw_fusion_sleeve_metrics(attack_eq, recommend_eq)
+    metric_row = {
+        "attack_score": float(metrics["attack_score"].iloc[signal_i]),
+        "recommend_score": float(metrics["recommend_score"].iloc[signal_i]),
+        "attack_edge": float(metrics["attack_edge"].iloc[signal_i]),
+        "attack_dd60": float(metrics["attack_dd60"].iloc[signal_i]),
+        "attack_r60": float(metrics["attack_r60"].iloc[signal_i]),
+    }
+    selected_sleeve = "attack" if tw_should_use_attack(metric_row) else "recommend"
+    score_weights = TW_ATTACK_COMPONENT_SCORE_WEIGHTS if selected_sleeve == "attack" else TW_RECOMMEND_COMPONENT_SCORE_WEIGHTS
+    min_score = TW_ATTACK_COMPONENT_THRESHOLD if selected_sleeve == "attack" else TW_RECOMMEND_COMPONENT_THRESHOLD
+    scores = tw_component_switch_score(component_eq, score_weights).iloc[signal_i].replace([np.inf, -np.inf], np.nan).dropna()
     selected = TW_PRODUCTION_FALLBACK_LEG
     top_score = float("nan")
+    second_score = float("nan")
     if len(scores):
         ranked = scores.sort_values(ascending=False)
         top_score = float(ranked.iloc[0])
-        selected = str(ranked.index[0]) if top_score >= TW_PRODUCTION_SWITCH_THRESHOLD else TW_PRODUCTION_FALLBACK_LEG
+        second_score = float(ranked.iloc[1]) if len(ranked) > 1 else float("nan")
+        selected = str(ranked.index[0]) if top_score >= min_score else TW_PRODUCTION_FALLBACK_LEG
     weights = tw_component_stock_weights_at(
         selected,
         tw_rule_for_leg(selected),
@@ -3257,9 +3526,16 @@ def tw_live_go_live_selection(
     )
     return {
         "selected_component": selected,
+        "selected_sleeve": selected_sleeve,
         "signal_date": signal_date,
         "rebalance_date": signal_date,
         "top_score": top_score,
+        "second_score": second_score,
+        "attack_score": metric_row["attack_score"],
+        "recommend_score": metric_row["recommend_score"],
+        "attack_edge": metric_row["attack_edge"],
+        "attack_dd60": metric_row["attack_dd60"],
+        "attack_r60": metric_row["attack_r60"],
         "stock_weights": weights,
         "signal_i": signal_i,
         "cycle_date": cycle_date,
@@ -3294,18 +3570,27 @@ def run_tw_top1_daily(state: dict[str, Any]) -> dict[str, Any]:
             component_equities[leg] = eq.rename(leg)
             component_positions[leg] = pos
     component_eq = pd.concat(component_equities, axis=1)
-    switch_modes, latest_mode_series = tw_select_top1_component(component_eq)
+    switch_modes, latest_mode_series = tw_select_top1_component(component_eq, component_positions, close)
     latest_component = str(latest_mode_series.iloc[0])
     latest_date = close.index[-1]
     latest_mode_row = switch_modes.tail(1).iloc[0].to_dict()
-    live_selection = tw_live_go_live_selection(close, symbol_map, features, component_eq)
+    live_selection = tw_live_go_live_selection(close, symbol_map, features, component_eq, component_positions)
     if live_selection:
         latest_component = str(live_selection["selected_component"])
         latest_mode_row = {
             "date": live_selection["rebalance_date"],
             "signal_date": live_selection["signal_date"],
+            "score_preset": TW_PRODUCTION_STRATEGY_ID,
+            "mode": TW_PRODUCTION_STRATEGY_MODE,
+            "selected_sleeve": live_selection.get("selected_sleeve"),
             "selected": latest_component,
             "top_score": live_selection["top_score"],
+            "second_score": live_selection.get("second_score"),
+            "attack_score": live_selection.get("attack_score"),
+            "recommend_score": live_selection.get("recommend_score"),
+            "attack_edge": live_selection.get("attack_edge"),
+            "attack_dd60": live_selection.get("attack_dd60"),
+            "attack_r60": live_selection.get("attack_r60"),
             "component_weights": f"{latest_component}:1.000000",
         }
     rebalance_step = TW_PRODUCTION_REBALANCE_STEP
@@ -3326,11 +3611,11 @@ def run_tw_top1_daily(state: dict[str, Any]) -> dict[str, Any]:
     rebalance_due_next_session = (not rebalance_due_today) and (trading_days_since_rebalance + 1 >= rebalance_step)
     rebalance_days_remaining = max(0, rebalance_step - trading_days_since_rebalance)
     if rebalance_due_today:
-        action_signal = "rebalance_top1_top2_switch_target"
+        action_signal = "rebalance_fusion_target"
     elif rebalance_due_next_session:
         action_signal = "next_session_rebalance_pending"
     else:
-        action_signal = "hold_top1_top2_switch_target"
+        action_signal = "hold_fusion_target"
 
     mp2 = symbol_map.drop_duplicates("symbol").set_index("symbol")
     stock_weights: dict[str, float] = {}
@@ -3353,7 +3638,7 @@ def run_tw_top1_daily(state: dict[str, Any]) -> dict[str, Any]:
                 "symbol": sym,
                 "name": meta.get("name", "") if hasattr(meta, "get") else "",
                 "theme": meta.get("strategy_group", "") if hasattr(meta, "get") else "",
-                "role": f"top1_top2_switch_{latest_component}",
+                "role": f"tw_fusion_{latest_mode_row.get('selected_sleeve', 'recommend')}_{latest_component}",
                 "target_weight": float(weight),
             }
         )
@@ -3369,7 +3654,9 @@ def run_tw_top1_daily(state: dict[str, Any]) -> dict[str, Any]:
     }
 
     score_i = int(live_selection["signal_i"]) if live_selection else (-2 if len(component_eq) >= 2 else -1)
-    latest_scores = tw_top1_switch_score(component_eq).iloc[score_i].sort_values(ascending=False)
+    score_sleeve = str(latest_mode_row.get("selected_sleeve") or "recommend")
+    selected_score_weights = TW_ATTACK_COMPONENT_SCORE_WEIGHTS if score_sleeve == "attack" else TW_RECOMMEND_COMPONENT_SCORE_WEIGHTS
+    latest_scores = tw_component_switch_score(component_eq, selected_score_weights).iloc[score_i].sort_values(ascending=False)
     theme_rank_rows = [
         {
             "rank": i,
@@ -3423,6 +3710,7 @@ def run_tw_top1_daily(state: dict[str, Any]) -> dict[str, Any]:
             "raw_target_position": raw_target_rows,
             "top1_switch_rule": TW_PRODUCTION_STRATEGY_ID,
             "execution_overlay": "TW_EQUAL_WEIGHT",
+            "selected_sleeve": latest_mode_row.get("selected_sleeve", "recommend"),
         }
     )
     market_state = {
@@ -3437,9 +3725,16 @@ def run_tw_top1_daily(state: dict[str, Any]) -> dict[str, Any]:
         "regime_state": 2,
         "regime_state_label": TW_PRODUCTION_STRATEGY_MODE,
         "selected_component": latest_component,
+        "selected_sleeve": latest_mode_row.get("selected_sleeve", "recommend"),
         "component_signal_date": latest_mode_row.get("signal_date"),
         "component_rebalance_date": latest_rebalance_date.strftime("%Y-%m-%d"),
         "component_top_score": latest_mode_row.get("top_score"),
+        "component_second_score": latest_mode_row.get("second_score"),
+        "attack_score": latest_mode_row.get("attack_score"),
+        "recommend_score": latest_mode_row.get("recommend_score"),
+        "attack_edge": latest_mode_row.get("attack_edge"),
+        "attack_dd60": latest_mode_row.get("attack_dd60"),
+        "attack_r60": latest_mode_row.get("attack_r60"),
         "rebalance_step_trading_days": rebalance_step,
         "trading_days_since_rebalance": trading_days_since_rebalance,
         "trading_days_since_signal": trading_days_since_signal,
@@ -3449,7 +3744,8 @@ def run_tw_top1_daily(state: dict[str, Any]) -> dict[str, Any]:
         "rebalance_count_basis": "execution_date_not_signal_date",
         "action_signal": action_signal,
         "notes": (
-            "TW production target uses clean Top1/Top2 Switch H46 threshold 0.20, then applies execution overlay: equal weight across selected stocks. "
+            "TW production target uses clean Attack/Recommend Fusion H46. Attack sleeve is used only when its sleeve score beats recommend by 0.05, attack 60D return is non-negative, and attack 60D drawdown stays above -60%; otherwise recommend sleeve is used. "
+            "Execution overlay remains equal weight across selected stocks. "
             "Manual go-live baseline recomputes the initial live target from that baseline close and then holds it until the next live cycle. "
             "No retraining in cloud package."
         ),
@@ -3462,6 +3758,7 @@ def run_tw_top1_daily(state: dict[str, Any]) -> dict[str, Any]:
     switch_modes.to_csv(TW_OUT / "latest_top1_switch_modes.csv", index=False, encoding="utf-8-sig")
     switch_modes.to_csv(TW_OUT / "latest_top2_h46_switch_modes.csv", index=False, encoding="utf-8-sig")
     switch_modes.to_csv(TW_OUT / "latest_top1_top2_switch_h46_th020_modes.csv", index=False, encoding="utf-8-sig")
+    switch_modes.to_csv(TW_OUT / "latest_attack_recommend_fusion_h46_modes.csv", index=False, encoding="utf-8-sig")
     action_report = {
         "market_state": market_state,
         "target_position": target_rows,
@@ -3674,6 +3971,10 @@ def run_update() -> dict[str, Any]:
             "outer_mode": tw["market_state"]["outer_mode"],
             "theme_alloc": tw["market_state"]["theme_alloc"],
             "regime_state": tw["market_state"]["regime_state"],
+            "strategy_mode": tw["market_state"].get("strategy_mode"),
+            "selected_sleeve": tw["market_state"].get("selected_sleeve"),
+            "selected_component": tw["market_state"].get("selected_component"),
+            "attack_edge": tw["market_state"].get("attack_edge"),
             "component_signal_date": tw["market_state"].get("component_signal_date"),
             "component_rebalance_date": tw["market_state"].get("component_rebalance_date"),
             "rebalance_step_trading_days": tw["market_state"].get("rebalance_step_trading_days"),
